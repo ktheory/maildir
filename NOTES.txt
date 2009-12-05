@@ -1,0 +1,17 @@
+md = Maildir.new(path)
+
+md.add(data) => message
+
+md.list_new => array of messages
+
+md.list_cur => array of messages
+
+message.process(flags) => moves message from new to cur and adds flags
+
+message.flags
+message.flags=
+message.add_flag
+message.remove_flag
+
+message.info
+message.info=

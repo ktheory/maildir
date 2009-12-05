@@ -1,0 +1,5 @@
+= Maildir
+
+A ruby library for reading and writing messages in the maildir format.
+
+See http://cr.yp.to/proto/maildir.html
