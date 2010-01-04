@@ -43,10 +43,10 @@ class Maildir
     get_dir_listing(new_or_cur)
   end
 
-  # Writes IO object out as a new message. See Maildir::Message.create for
-  # more.
-  def add_message(io)
-    Maildir::Message.create(self, io)
+  # Writes string_or_io object out as a new message. See
+  # Maildir::Message.create for more.
+  def add_message(string_or_io)
+    Maildir::Message.create(self, string_or_io)
   end
 
   def get_message(key)
