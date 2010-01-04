@@ -112,6 +112,12 @@ class Maildir::Message
     File.join(@maildir.path, key)
   end
 
+  # Deletes the message path and freezes the message object
+  def destroy
+    File.delete(path)
+    freeze
+  end
+
   protected
   # Sets dir, unique_name, and info based on the key
   def parse_key(key)

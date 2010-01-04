@@ -147,6 +147,15 @@ class TestMessage < Test::Unit::TestCase
           assert_match /#{path_suffix}$/, @message.path
         end
       end
+      context "when destroyed" do
+        setup { @message.destroy }
+        should "be frozen" do
+          assert @message.frozen?, "Message is not frozen"
+        end
+        should "have a nonexistant path" do
+          assert !File.exists?(@message.path), "Message path exists"
+        end
+      end
     end
   end
 end
