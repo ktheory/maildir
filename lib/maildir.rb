@@ -1,3 +1,4 @@
+require 'fileutils'
 class Maildir
 
   SUBDIRS = [:tmp, :new, :cur].freeze
