@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aaron Suggs"]
-  s.date = %q{2009-12-05}
+  s.date = %q{2010-01-05}
   s.description = %q{A ruby library for reading and writing arbitrary messages in DJB's maildir format}
   s.email = %q{aaron@ktheory.com}
   s.extra_rdoc_files = [
@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
      "README.rdoc"
   ]
   s.files = [
-    "LICENSE",
+    ".gitignore",
+     "LICENSE",
      "NOTES.txt",
      "README.rdoc",
      "Rakefile",
@@ -26,6 +27,7 @@ Gem::Specification.new do |s|
      "lib/maildir.rb",
      "lib/maildir/message.rb",
      "lib/maildir/unique_name.rb",
+     "maildir.gemspec",
      "test/test_helper.rb",
      "test/test_maildir.rb",
      "test/test_message.rb",
