@@ -1,4 +1,30 @@
 #!/usr/bin/env ruby
-
-$: << File.join(File.dirname(__FILE__), '..', 'lib')
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'maildir'
+require 'benchmark'
+
+maildir_path = ENV['MAILDIR'] || "./tmp"
+maildir = Maildir.new(maildir_path)
+
+n = 300
+message = "Write #{n} messages:"
+tms = Benchmark.bmbm(message.size) do |x|
+   x.report(message) { n.times { maildir.add_message("") } }
+end
+
+puts "#{n/tms.first.real} messages per second"
+
+
+message = "List new:"
+tms = Benchmark.bm(message.size) do |x|
+  x.report(message) { n.times { maildir.list_keys(:new)} }
+end
+
+# require 'ruby-prof'
+# result = RubyProf.profile do
+#   n.times { maildir.list_keys(:new) }
+# end
+# 
+# # Print a graph profile to text
+# printer = RubyProf::GraphPrinter.new(result)
+# printer.print(STDOUT, 0)

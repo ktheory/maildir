@@ -22,3 +22,8 @@ begin
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install jeweler"
 end
+
+desc "Run benchmarks"
+task :bench do
+  load File.join(File.dirname(__FILE__), "benchmarks", "runner")
+end
