@@ -61,7 +61,9 @@ class Maildir
 
     # Remove the maildir's path from the beginning of the message path
     @dir_listing_regexp ||= /^#{Regexp.quote(self.path)}/
-    results.each{|message_path| message_path.sub!(@dir_listing_regexp, "")}
+    results.each do |message_path|
+      message_path.sub!(@dir_listing_regexp, "")
+    end
   end
 end
 
