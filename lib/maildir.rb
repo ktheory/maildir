@@ -58,8 +58,10 @@ class Maildir
   def get_dir_listing(new_or_cur)
     search_path = File.join(self.path, new_or_cur.to_s, '*')
     results = Dir.glob(search_path)
+
     # Remove the maildir's path from the beginning of the message path
-    results.map!{|message_path| message_path.sub!(self.path, '')}
+    @dir_listing_regexp ||= /^#{Regexp.quote(self.path)}/
+    results.each{|message_path| message_path.sub!(@dir_listing_regexp, "")}
   end
 end
 
