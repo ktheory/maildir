@@ -33,6 +33,17 @@ class TestMaildir < Test::Unit::TestCase
       assert_equal temp_maildir.path, new_maildir.path
       assert_equal temp_maildir, new_maildir
     end
+    
+    context "with a message" do
+      setup do
+        @key = temp_maildir.add_message("").key
+      end
+
+      should "list the message in it's keys" do
+        keys = temp_maildir.list_keys(:new)
+        assert_equal keys, [@key]
+      end
+    end
   end
 
 end
