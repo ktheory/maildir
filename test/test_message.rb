@@ -66,7 +66,7 @@ class TestMessage < Test::Unit::TestCase
       end
 
       should "have the correct data" do
-        assert @data == File.open(@message.path).read
+        assert @data == @message.contents
       end
     end
 
@@ -77,7 +77,7 @@ class TestMessage < Test::Unit::TestCase
       end
 
       should "have the correct data" do
-        assert @data == File.open(@message.path).read
+        assert @data == @message.contents
       end
     end
   end
@@ -89,7 +89,7 @@ class TestMessage < Test::Unit::TestCase
     end
 
     should "have the correct data" do
-      assert @data == File.open(@message.path).read
+      assert @data == @message.contents
     end
 
     context "when processed" do

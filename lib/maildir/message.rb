@@ -112,6 +112,11 @@ class Maildir::Message
     File.join(@maildir.path, key)
   end
 
+  # Returns the contents of the message as a string
+  def contents
+    File.read(path)
+  end
+
   # Deletes the message path and freezes the message object
   def destroy
     File.delete(path)
