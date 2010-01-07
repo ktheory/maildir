@@ -36,12 +36,12 @@ class TestMaildir < Test::Unit::TestCase
     
     context "with a message" do
       setup do
-        @key = temp_maildir.add("").key
+        @message = temp_maildir.add("")
       end
 
       should "list the message in it's keys" do
-        keys = temp_maildir.list_keys(:new)
-        assert_equal keys, [@key]
+        messages = temp_maildir.list(:new)
+        assert_equal messages, [@message]
       end
     end
   end

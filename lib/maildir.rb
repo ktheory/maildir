@@ -35,16 +35,31 @@ class Maildir
     end
   end
 
-  def list(new_or_cur)
-    list_keys(new_or_cur).map{|key| get(key)}
-  end
-
-  def list_keys(new_or_cur)
+  # Returns an arry of messages from :new or :cur directory, sorted by key.
+  # If options[:limit] is specified, returns only so many keys.
+  #
+  # E.g.
+  #  maildir.list(:new) # => all new messages
+  #  maildir.list(:cur, :limit => 10) # => 10 oldest messages in cur
+  def list(new_or_cur, options = {})
     new_or_cur = new_or_cur.to_sym
     unless [:new, :cur].include? new_or_cur
       raise ArgumentError, "first arg must be new or cur"
     end
-    get_dir_listing(new_or_cur)
+
+    keys = get_dir_listing(new_or_cur)
+
+    # Sort the keys (effectively chronological order)
+    # TODO: make sorting configurable
+    keys.sort!
+
+    # Apply the limit
+    if limit = options[:limit]
+      keys = keys[0,limit]
+    end
+
+    # Map keys to message objects
+    keys.map{|key| get(key)}
   end
 
   # Writes data object out as a new message. See
