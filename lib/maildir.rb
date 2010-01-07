@@ -36,7 +36,7 @@ class Maildir
   end
 
   def list(new_or_cur)
-    list_keys(new_or_cur).map{|key| get_message(key)}
+    list_keys(new_or_cur).map{|key| get(key)}
   end
 
   def list_keys(new_or_cur)
@@ -49,11 +49,11 @@ class Maildir
 
   # Writes data object out as a new message. See
   # Maildir::Message.create for more.
-  def add_message(data)
+  def add(data)
     Maildir::Message.create(self, data)
   end
 
-  def get_message(key)
+  def get(key)
     Maildir::Message.new(self, key)
   end
 

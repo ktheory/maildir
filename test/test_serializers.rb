@@ -28,7 +28,7 @@ class TestSerializers < Test::Unit::TestCase
 
         # Set the message serializer
         Maildir::Message.serializer = klass.new
-        @message = temp_maildir.add_message(@data)
+        @message = temp_maildir.add(@data)
       end
 
       should "have the correct data" do

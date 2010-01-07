@@ -36,7 +36,7 @@ class TestMaildir < Test::Unit::TestCase
     
     context "with a message" do
       setup do
-        @key = temp_maildir.add_message("").key
+        @key = temp_maildir.add("").key
       end
 
       should "list the message in it's keys" do
