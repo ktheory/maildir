@@ -50,6 +50,11 @@ class Maildir::Message
     end
   end
 
+  # Messages are identical if their paths are identical
+  def ==(message)
+    Maildir::Message === message && message.path == self.path
+  end
+
   # Returns the class' serializer
   def serializer
     self.class.serializer
