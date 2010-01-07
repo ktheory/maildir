@@ -5,17 +5,24 @@ class Maildir::Message
   INFO = "2,"
 
   class << self
-    # Create a new message in maildir with the contents of string_or_io.
+    # Create a new message in maildir with data.
     # The message is first written to the tmp dir, then moved to new. This is
     # a shortcut for:
     #   message = Maildir::Message.new(maildir)
-    #   message.write(string_or_io)
-    def create(maildir, string_or_io)
+    #   message.write(data)
+    def create(maildir, data)
       message = self.new(maildir)
-      message.write(string_or_io)
+      message.write(data)
       message
     end
+
+    # The serializer processes data before it is written to disk and after
+    # reading from disk.
+    attr_accessor :serializer
   end
+  
+  # Default serializer
+  @serializer = Maildir::Serializer::Base.new
 
   attr_reader :dir, :unique_name, :info, :old_key
 
@@ -43,24 +50,22 @@ class Maildir::Message
     end
   end
 
-  # Writes string_or_io to disk. Can only be called on messages
-  # instantiated without a key (which haven't been written to disk). If the
-  # +string_or_io+ object has a 'read' method, calls string_or_io.read.
-  # Otherwise, calls string_or_io.to_s.
+  # Returns the class' serializer
+  def serializer
+    self.class.serializer
+  end
+
+  # Writes data to disk. Can only be called on messages instantiated without
+  # a key (which haven't been written to disk). After successfully writing
+  # to disk, rename the message to the new dir
   #
   # Returns the message's key
-  def write(string_or_io)
+  def write(data)
     raise "Can only write to messages in tmp" unless :tmp == @dir
-    # Write out contents to tmp
-    File.open(path, 'w') do |file|
-      if string_or_io.respond_to?(:read)
-        file.puts string_or_io.read
-      else
-        file.puts string_or_io.to_s
-      end
-    end
 
-    # Rename to new
+    # Write out contents to tmp
+    serializer.dump(data, path)
+
     rename(:new)
   end
 
@@ -112,9 +117,9 @@ class Maildir::Message
     File.join(@maildir.path, key)
   end
 
-  # Returns the contents of the message as a string
-  def contents
-    File.read(path)
+  # Returns the message's data from disk
+  def data
+    serializer.load(path)
   end
 
   # Deletes the message path and freezes the message object
@@ -124,6 +129,7 @@ class Maildir::Message
   end
 
   protected
+
   # Sets dir, unique_name, and info based on the key
   def parse_key(key)
     @dir, filename = key.split(File::SEPARATOR)

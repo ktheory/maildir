@@ -66,18 +66,7 @@ class TestMessage < Test::Unit::TestCase
       end
 
       should "have the correct data" do
-        assert @data == @message.contents
-      end
-    end
-
-    context "when written with an IO object" do
-      setup do
-        @data = "foo\n"
-        @message.write(StringIO.open(@data))
-      end
-
-      should "have the correct data" do
-        assert @data == @message.contents
+        assert @data == @message.data
       end
     end
   end
@@ -89,7 +78,7 @@ class TestMessage < Test::Unit::TestCase
     end
 
     should "have the correct data" do
-      assert @data == @message.contents
+      assert @data == @message.data
     end
 
     context "when processed" do

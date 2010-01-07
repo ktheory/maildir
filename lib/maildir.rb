@@ -1,13 +1,16 @@
-require 'fileutils'
+require 'fileutils' # For create_directories
 class Maildir
 
   SUBDIRS = [:tmp, :new, :cur].freeze
   READABLE_DIRS = SUBDIRS.reject{|s| :tmp == s}.freeze
 
   attr_reader :path
+
+  # Create a new maildir at +path+. If +create+ is true, will ensure that the
+  # required subdirectories exist.
   def initialize(path, create = true)
     @path = File.join(path, '/') # Ensure path has a trailing slash
-    create_subdirectories if create
+    create_directories if create
   end
 
   # Maildirs are indentical if they have the same path
@@ -26,7 +29,7 @@ class Maildir
   # Ensure subdirectories exist. This can safely be called multiple times, but
   # must hit the disk. Avoid calling this if you're certain the directories
   # exist.
-  def create_subdirectories
+  def create_directories
     SUBDIRS.each do |subdir|
       FileUtils.mkdir_p(self.send("#{subdir}_path"))
     end
@@ -44,10 +47,10 @@ class Maildir
     get_dir_listing(new_or_cur)
   end
 
-  # Writes string_or_io object out as a new message. See
+  # Writes data object out as a new message. See
   # Maildir::Message.create for more.
-  def add_message(string_or_io)
-    Maildir::Message.create(self, string_or_io)
+  def add_message(data)
+    Maildir::Message.create(self, data)
   end
 
   def get_message(key)
@@ -66,6 +69,6 @@ class Maildir
     end
   end
 end
-
 require 'maildir/unique_name'
+require 'maildir/serializer/base'
 require 'maildir/message'

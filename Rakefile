@@ -16,7 +16,9 @@ begin
     gemspec.email = "aaron@ktheory.com"
     gemspec.homepage = "http://github.com/ktheory/maildir"
     gemspec.authors = ["Aaron Suggs"]
-    gemspec.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gemspec.add_development_dependency "shoulda", ">= 0"
+    gemspec.add_development_dependency "mail", ">= 0"
+    gemspec.add_development_dependency "json", ">= 0"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
