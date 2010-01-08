@@ -25,6 +25,11 @@ class Maildir
     self.path <=> maildir.path
   end
 
+  # Friendly inspect method
+  def inspect
+    "#<#{self.class} path=#{@path}>"
+  end
+
   # define methods tmp_path, new_path, & cur_path
   SUBDIRS.each do |subdir|
     define_method "#{subdir}_path" do

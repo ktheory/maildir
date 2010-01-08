@@ -62,6 +62,11 @@ class Maildir::Message
     self.path <=> message.path
   end
 
+  # Friendly inspect method
+  def inspect
+    "#<#{self.class} key=#{key} maildir=#{@maildir.inspect}>"
+  end
+
   # Returns the class' serializer
   def serializer
     self.class.serializer

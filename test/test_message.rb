@@ -151,15 +151,15 @@ class TestMessage < Test::Unit::TestCase
     setup do
       @message1 = temp_maildir.add("")
     end
-    
+
     should "differ" do
       @message2 = Maildir::Message.new(temp_maildir)
       assert_equal -1, @message1 <=> @message2
       assert_equal 1,  @message2 <=> @message1
       assert_not_equal @message1, @message2
-      
+
     end
-    
+
     should "be identical" do
       another_message1 = temp_maildir.get(@message1.key)
       assert_equal @message1, another_message1
