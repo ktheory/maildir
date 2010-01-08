@@ -4,6 +4,8 @@ class Maildir
   SUBDIRS = [:tmp, :new, :cur].freeze
   READABLE_DIRS = SUBDIRS.reject{|s| :tmp == s}.freeze
 
+  include Comparable
+
   attr_reader :path
 
   # Create a new maildir at +path+. If +create+ is true, will ensure that the
@@ -13,10 +15,14 @@ class Maildir
     create_directories if create
   end
 
-  # Maildirs are indentical if they have the same path
-  def ==(maildir)
-    return false unless Maildir === maildir
-    maildir.path == self.path
+  # Compare maildirs by their paths.
+  # If maildir is a different class, return nil.
+  # Otherwise, return 1, 0, or -1.
+  def <=>(maildir)
+    # Return nil if comparing different classes
+    return nil unless self.class === maildir
+
+    self.path <=> maildir.path
   end
 
   # define methods tmp_path, new_path, & cur_path

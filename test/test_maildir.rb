@@ -2,11 +2,6 @@ require 'test_helper'
 class TestMaildir < Test::Unit::TestCase
 
   context "A maildir" do
-
-    should "be initialized" do
-      assert temp_maildir
-    end
-
     should "have a path" do
       assert_not_empty temp_maildir.path
     end
@@ -43,6 +38,13 @@ class TestMaildir < Test::Unit::TestCase
         messages = temp_maildir.list(:new)
         assert_equal messages, [@message]
       end
+    end
+  end
+
+  context "Maildirs with the same path" do
+    should "be identical" do
+      another_maildir = Maildir.new(temp_maildir.path, false)
+      assert_equal temp_maildir, another_maildir
     end
   end
 

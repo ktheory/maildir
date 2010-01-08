@@ -52,8 +52,8 @@ class Maildir::Message
     end
   end
 
-  # Compares messages based on their paths.
-  # If message is a differnt class, return nil.
+  # Compares messages by their paths.
+  # If message is a different class, return nil.
   # Otherwise, return 1, 0, or -1.
   def <=>(message)
     # Return nil if comparing different classes
