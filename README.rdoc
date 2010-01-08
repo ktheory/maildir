@@ -85,13 +85,15 @@ Maildir::Serializer::Base simply reads and writes strings to disk.
 
 The Mail serializer takes a ruby Mail object (http://github.com/mikel/mail) and writes RFC2822 email messages.
 
+  require 'maildir/serializer/mail'
   Maildir::Message.serializer = Maildir::Serializer::Mail.new
   mail = Mail.new(...)
   message = maildir.add(mail) # writes and RFC2822 message to disk
   message.data == mail # => true; data is parsed as a Mail object
 
-The Marshal, JSON, and YAML serializers work similarly. E.g.
+The Marshal, JSON, and YAML serializers work similarly. E.g.:
 
+  require 'maildir/serializer/json'
   Maildir::Message.serializer = Maildir::Serializer::JSON.new
   my_data = {"foo" => nil, "my_array" => [1,2,3]}
   message = maildir.add(my_data) # writes {"foo":null,"my_array":[1,2,3]}
