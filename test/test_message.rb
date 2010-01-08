@@ -167,6 +167,7 @@ class TestMessage < Test::Unit::TestCase
       assert_equal old_key, @message.key
     end
   end
+
   context "Messages" do
     setup do
       @message1 = temp_maildir.add("")
@@ -183,6 +184,20 @@ class TestMessage < Test::Unit::TestCase
     should "be identical" do
       another_message1 = temp_maildir.get(@message1.key)
       assert_equal @message1, another_message1
+    end
+  end
+
+  context "Message#utime" do
+    should "update the messages atime and mtime" do
+      @message = temp_maildir.add("")
+      atime = Time.now - 30
+      mtime = Time.now - 60
+
+      @message.utime(atime, mtime)
+
+      # Times should be within 1 second of each other
+      assert_in_delta atime, @message.atime, 1
+      assert_in_delta mtime, @message.mtime, 1
     end
   end
 end

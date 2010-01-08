@@ -144,6 +144,22 @@ class Maildir::Message
     guard(true) { serializer.load(path) }
   end
 
+  # Updates the modification and access time. Returns 1 if successful, false
+  # otherwise.
+  def utime(atime, mtime)
+    guard { File.utime(atime, mtime, path) }
+  end
+
+  # Returns the message's atime, or false if the file doesn't exist.
+  def atime
+    guard { File.atime(path) }
+  end
+
+  # Returns the message's mtime, or false if the file doesn't exist.
+  def mtime
+    guard { File.mtime(path) }
+  end
+
   # Deletes the message path and freezes the message object
   def destroy
     guard { File.delete(path) }
