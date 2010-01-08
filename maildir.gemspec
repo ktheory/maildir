@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{maildir}
-  s.version = "0.2.0"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aaron Suggs"]
-  s.date = %q{2010-01-05}
+  s.date = %q{2010-01-08}
   s.description = %q{A ruby library for reading and writing arbitrary messages in DJB's maildir format}
   s.email = %q{aaron@ktheory.com}
   s.extra_rdoc_files = [
@@ -19,18 +19,23 @@ Gem::Specification.new do |s|
   s.files = [
     ".gitignore",
      "LICENSE",
-     "NOTES.txt",
      "README.rdoc",
      "Rakefile",
      "VERSION",
      "benchmarks/runner",
      "lib/maildir.rb",
      "lib/maildir/message.rb",
+     "lib/maildir/serializer/base.rb",
+     "lib/maildir/serializer/json.rb",
+     "lib/maildir/serializer/mail.rb",
+     "lib/maildir/serializer/marshal.rb",
+     "lib/maildir/serializer/yaml.rb",
      "lib/maildir/unique_name.rb",
      "maildir.gemspec",
      "test/test_helper.rb",
      "test/test_maildir.rb",
      "test/test_message.rb",
+     "test/test_serializers.rb",
      "test/test_unique_name.rb"
   ]
   s.homepage = %q{http://github.com/ktheory/maildir}
@@ -42,6 +47,7 @@ Gem::Specification.new do |s|
     "test/test_helper.rb",
      "test/test_maildir.rb",
      "test/test_message.rb",
+     "test/test_serializers.rb",
      "test/test_unique_name.rb"
   ]
 
@@ -50,12 +56,18 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_development_dependency(%q<shoulda>, [">= 0"])
+      s.add_development_dependency(%q<mail>, [">= 0"])
+      s.add_development_dependency(%q<json>, [">= 0"])
     else
-      s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+      s.add_dependency(%q<shoulda>, [">= 0"])
+      s.add_dependency(%q<mail>, [">= 0"])
+      s.add_dependency(%q<json>, [">= 0"])
     end
   else
-    s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
+    s.add_dependency(%q<shoulda>, [">= 0"])
+    s.add_dependency(%q<mail>, [">= 0"])
+    s.add_dependency(%q<json>, [">= 0"])
   end
 end
 
