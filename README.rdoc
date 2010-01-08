@@ -2,8 +2,106 @@
 
 A ruby library for reading and writing messages in the maildir format.
 
-See http://cr.yp.to/proto/maildir.html
+== What's so great about the maildir format
+
+See http://cr.yp.to/proto/maildir.html and http://en.wikipedia.org/wiki/Maildir
+
+As Daniel J. Berstein puts it: "Two words: no locks." The maildir format allows multiple processes to read and write arbitrary messages without file locks.
+
+New messages are initially written to a "tmp" directory with an automatically-generated unique filename. After the message is written, it's moved to the "new" directory where other processes may read it.
+
+While the maildir format was created for email, it works well for arbitrary data. This library can read & write email messages or arbitrary data. See Pluggable serializers for more.
+
+== Install
+
+ sudo gem install maildir
+
+== Usage
+
+Create a maildir in /home/aaron/mail
+
+  maildir = Maildir.new("/home/aaron/mail") # creates tmp, new, and cur dirs
+  # call Maildir.new("/home/aaron/mail", false) to skip directory creation.
+
+Add a new message. This creates a new file with the contents "Hello World!"; returns the path fragment to the file. Messages are written to the tmp dir then moved to new.
+
+  message = maildir.add("Hello World!")
+
+List new messages
+
+  maildir.list(:new) # => [message]
+
+Move the message from "new" to "cur" to indicate that some process has retrieved the message.
+
+  message.process
+
+Indeed, the message is in cur, not new.
+
+  maildir.list(:new) # => []
+  maildir.list(:cur) # => [message]
+
+Add some flags to the message to indicate state. See "What can I put in info" at http://cr.yp.to/proto/maildir.html for flag conventions.
+
+  message.add_flag("S") # Mark the message as "seen"
+  message.add_flag("F") # Mark the message as "flagged"
+  message.remove_flag("F") # unflag the message
+  message.add_flag("T") # Mark the message as "trashed"
+
+Get a key to uniquely identify the message
+
+  key = message.key
+
+Load the contents of the message
+
+  data = message.data
+
+Find the message based using the key
+
+  message_copy = maildir.get(key)
+  message == message_copy # => true
+
+Delete the message from disk
+
+  message.destroy # => returns the frozen message
+  maildir.list(:cur) # => []
+
+== Pluggable serializers
+
+By default, message data are written and read from disk as a string. It's often desirable to process the string into a useful object. Maildir supports configurable serializers to convert message data into a useful object.
+
+The following serializers are included:
+
+* Maildir::Serializer::Base (the default)
+* Maildir::Serializer::Mail
+* Maildir::Serializer::Marshal
+* Maildir::Serializer::JSON
+* Maildir::Serializer::YAML
+
+Maildir::Serializer::Base simply reads and writes strings to disk.
+
+  Maildir::Message.serializer # => Maildir::Serializer::Base.new (by default)
+  message = maildir.add("Hello World!") # writes "Hello World!" to disk
+  message.data # => "Hello World!"
+
+The Mail serializer takes a ruby Mail object (http://github.com/mikel/mail) and writes RFC2822 email messages.
+
+  Maildir::Message.serializer = Maildir::Serializer::Mail.new
+  mail = Mail.new(...)
+  message = maildir.add(mail) # writes and RFC2822 message to disk
+  message.data == mail # => true; data is parsed as a Mail object
+
+The Marshal, JSON, and YAML serializers work similarly. E.g.
+
+  Maildir::Message.serializer = Maildir::Serializer::JSON.new
+  my_data = {"foo" => nil, "my_array" => [1,2,3]}
+  message = maildir.add(my_data) # writes {"foo":null,"my_array":[1,2,3]}
+  message.data == my_data # => true
+
+It's trivial to create a custom serializer. Implement the following two methods:
+
+  load(path)
+  dump(data, path)
 
 == Copyright
 
-Copyright (c) 2009 Aaron Suggs. See LICENSE for details.
+Copyright (c) 2010 Aaron Suggs. See LICENSE for details.

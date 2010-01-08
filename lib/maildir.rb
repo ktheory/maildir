@@ -69,7 +69,7 @@ class Maildir
     messages
   end
 
-  # Writes data object out as a new message. See
+  # Writes data object out as a new message. Returns a Maildir::Message. See
   # Maildir::Message.create for more.
   def add(data)
     Maildir::Message.create(self, data)
