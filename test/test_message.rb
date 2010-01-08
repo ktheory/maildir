@@ -147,6 +147,26 @@ class TestMessage < Test::Unit::TestCase
     end
   end
 
+  context "A message with a bad path" do
+    setup do
+      @message = temp_maildir.add("")
+      File.delete(@message.path)
+    end
+
+    should "raise error for data" do
+      assert_raise Errno::ENOENT do
+        @message.data
+      end
+      assert @message.frozen?
+    end
+
+    should "return not be processed" do
+      old_key = @message.key
+      assert_equal false, @message.process
+      assert @message.frozen?
+      assert_equal old_key, @message.key
+    end
+  end
   context "Messages" do
     setup do
       @message1 = temp_maildir.add("")
@@ -165,5 +185,4 @@ class TestMessage < Test::Unit::TestCase
       assert_equal @message1, another_message1
     end
   end
-
 end
