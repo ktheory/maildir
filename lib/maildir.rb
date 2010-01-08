@@ -49,17 +49,18 @@ class Maildir
 
     keys = get_dir_listing(new_or_cur)
 
-    # Sort the keys (effectively chronological order)
+    # Map keys to message objects
+    messages = keys.map{|key| get(key)}
+
+    # Sort the messages (effectively chronological order)
     # TODO: make sorting configurable
-    keys.sort!
+    messages.sort!
 
     # Apply the limit
     if limit = options[:limit]
-      keys = keys[0,limit]
+      messages = messages[0,limit]
     end
-
-    # Map keys to message objects
-    keys.map{|key| get(key)}
+    messages
   end
 
   # Writes data object out as a new message. See

@@ -1,7 +1,6 @@
 require 'test_helper'
 class TestMessage < Test::Unit::TestCase
 
-
   context "An new, unwritten message" do
     setup do
       @message = Maildir::Message.new(temp_maildir)
@@ -66,7 +65,7 @@ class TestMessage < Test::Unit::TestCase
       end
 
       should "have the correct data" do
-        assert @data == @message.data
+        assert_equal @data, @message.data
       end
     end
   end
@@ -78,7 +77,7 @@ class TestMessage < Test::Unit::TestCase
     end
 
     should "have the correct data" do
-      assert @data == @message.data
+      assert_equal @data, @message.data
     end
 
     context "when processed" do
@@ -147,4 +146,24 @@ class TestMessage < Test::Unit::TestCase
       end
     end
   end
+
+  context "Messages" do
+    setup do
+      @message1 = temp_maildir.add("")
+    end
+    
+    should "differ" do
+      @message2 = Maildir::Message.new(temp_maildir)
+      assert_equal -1, @message1 <=> @message2
+      assert_equal 1,  @message2 <=> @message1
+      assert_not_equal @message1, @message2
+      
+    end
+    
+    should "be identical" do
+      another_message1 = temp_maildir.get(@message1.key)
+      assert_equal @message1, another_message1
+    end
+  end
+
 end

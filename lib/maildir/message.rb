@@ -4,6 +4,8 @@ class Maildir::Message
   # The default info, to which flags are appended
   INFO = "2,"
 
+  include Comparable
+
   class << self
     # Create a new message in maildir with data.
     # The message is first written to the tmp dir, then moved to new. This is
@@ -20,7 +22,7 @@ class Maildir::Message
     # reading from disk.
     attr_accessor :serializer
   end
-  
+
   # Default serializer
   @serializer = Maildir::Serializer::Base.new
 
@@ -50,9 +52,14 @@ class Maildir::Message
     end
   end
 
-  # Messages are identical if their paths are identical
-  def ==(message)
-    Maildir::Message === message && message.path == self.path
+  # Compares messages based on their paths.
+  # If message is a differnt class, return nil.
+  # Otherwise, return 1, 0, or -1.
+  def <=>(message)
+    # Return nil if comparing different classes
+    return nil unless self.class === message
+
+    self.path <=> message.path
   end
 
   # Returns the class' serializer
