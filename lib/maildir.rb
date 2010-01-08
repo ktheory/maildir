@@ -60,18 +60,17 @@ class Maildir
 
     keys = get_dir_listing(new_or_cur)
 
-    # Map keys to message objects
-    messages = keys.map{|key| get(key)}
-
-    # Sort the messages (effectively chronological order)
+    # Sort the keys (chronological order)
     # TODO: make sorting configurable
-    messages.sort!
+    keys.sort!
 
-    # Apply the limit
+    # Apply the limit after sorting
     if limit = options[:limit]
-      messages = messages[0,limit]
+      keys = keys[0,limit]
     end
-    messages
+
+    # Map keys to message objects
+    keys.map{|key| get(key)}
   end
 
   # Writes data object out as a new message. Returns a Maildir::Message. See
@@ -80,8 +79,14 @@ class Maildir
     Maildir::Message.create(self, data)
   end
 
+  # Returns a message object for key
   def get(key)
     Maildir::Message.new(self, key)
+  end
+
+  # Deletes the message for key by calling destroy() on the message.
+  def delete(key)
+    get(key).destroy
   end
 
   protected
