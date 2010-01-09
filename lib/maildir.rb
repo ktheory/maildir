@@ -99,3 +99,4 @@ end
 require 'maildir/unique_name'
 require 'maildir/serializer/base'
 require 'maildir/message'
+require 'maildir/subdirs'
