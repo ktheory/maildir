@@ -88,7 +88,7 @@ The Mail serializer takes a ruby Mail object (http://github.com/mikel/mail) and 
   require 'maildir/serializer/mail'
   Maildir::Message.serializer = Maildir::Serializer::Mail.new
   mail = Mail.new(...)
-  message = maildir.add(mail) # writes and RFC2822 message to disk
+  message = maildir.add(mail) # writes an RFC2822 message to disk
   message.data == mail # => true; data is parsed as a Mail object
 
 The Marshal, JSON, and YAML serializers work similarly. E.g.:
