@@ -52,4 +52,15 @@ class TestMaildir < Test::Unit::TestCase
     end
   end
 
+  context "Maildirs with stale messages in tmp" do
+    should "be found" do
+      stale_path = File.join(temp_maildir.path, "tmp", "stale_message")
+      File.open(stale_path, "w"){|f| f.write("")}
+      stale_time = Time.now - 30*24*60*60 # 1 month ago
+      File.utime(stale_time, stale_time, stale_path)
+
+      stale_tmp = [temp_maildir.get("tmp/stale_message")]
+      assert_equal stale_tmp, temp_maildir.get_stale_tmp
+    end
+  end
 end
