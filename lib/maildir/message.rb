@@ -6,25 +6,31 @@ class Maildir::Message
 
   include Comparable
 
-  class << self
-    # Create a new message in maildir with data.
-    # The message is first written to the tmp dir, then moved to new. This is
-    # a shortcut for:
-    #   message = Maildir::Message.new(maildir)
-    #   message.write(data)
-    def create(maildir, data)
-      message = self.new(maildir)
-      message.write(data)
-      message
-    end
-
-    # The serializer processes data before it is written to disk and after
-    # reading from disk.
-    attr_accessor :serializer
+  # Create a new message in maildir with data.
+  # The message is first written to the tmp dir, then moved to new. This is
+  # a shortcut for:
+  #   message = Maildir::Message.new(maildir)
+  #   message.write(data)
+  def self.create(maildir, data)
+    message = self.new(maildir)
+    message.write(data)
+    message
   end
 
+  # The serializer processes data before it is written to disk and after
+  # reading from disk.
   # Default serializer
-  @serializer = Maildir::Serializer::Base.new
+  @@serializer = Maildir::Serializer::Base.new
+
+  # Get the serializer
+  def self.serializer
+    @@serializer
+  end
+
+  # Set the serializer
+  def self.serializer=(serializer)
+    @@serializer = serializer
+  end
 
   attr_reader :dir, :unique_name, :info
 
@@ -69,7 +75,7 @@ class Maildir::Message
 
   # Returns the class' serializer
   def serializer
-    self.class.serializer
+    @@serializer
   end
 
   # Writes data to disk. Can only be called on messages instantiated without
