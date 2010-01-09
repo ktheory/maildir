@@ -10,6 +10,14 @@ module Maildir::Subdirs
     end
   end
   
+  def create_subdir(name)
+    raise ArgumentError.new("'name' may not contain delimiter character (#{DELIM})") if name.include?(DELIM)
+    full_name = (root? ? [] : subdir_parts(File.basename(path))).push(name).unshift('').join(DELIM)
+    md = Maildir.new(File.join(path, full_name), true)
+    @subdirs << md if @subdirs
+    md
+  end
+  
   # returns the logical mailbox path
   def mailbox_path
     @mailbox_path ||= root? ? ROOT_NAME : subdir_parts(File.basename(path)).unshift(ROOT_NAME).join(DELIM)
