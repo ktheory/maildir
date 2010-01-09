@@ -105,6 +105,24 @@ class Maildir::Message
     rename(:cur, info)
   end
 
+  FLAG_NAMES = { 
+    :passed => 'P',
+    :replied => 'R',
+    :seen => 'S',
+    :trashed => 'T',
+    :draft => 'D',
+    :flagged => 'F'
+  }
+  
+  FLAG_NAMES.each_pair do |key, value|
+    define_method("#{key}?".to_sym) do 
+      flags.include?(value)
+    end
+    define_method("#{key}!".to_sym) do 
+      add_flag(value)
+    end
+  end
+  
   # Returns an array of single letter flags applied to the message
   def flags
     @info.sub(INFO,'').split('')
