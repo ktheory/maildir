@@ -2,6 +2,7 @@
 # see http://www.courier-mta.org/imap/README.imapkeywords.html for details
 
 require 'ftools'
+require 'maildir'
 module Maildir::Keywords
   def self.included(base)
     Maildir::Message.send(:include, MessageExtension)

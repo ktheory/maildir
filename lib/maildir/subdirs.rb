@@ -1,4 +1,5 @@
 # implements subdirs as used by the Courier Mail Server (courier-mta.org)
+require 'maildir'
 module Maildir::Subdirs
   ROOT_NAME = 'INBOX'
   DELIM = '.'
