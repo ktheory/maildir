@@ -6,27 +6,33 @@ class Maildir::Message
 
   include Comparable
 
-  class << self
-    # Create a new message in maildir with data.
-    # The message is first written to the tmp dir, then moved to new. This is
-    # a shortcut for:
-    #   message = Maildir::Message.new(maildir)
-    #   message.write(data)
-    def create(maildir, data)
-      message = self.new(maildir)
-      message.write(data)
-      message
-    end
-
-    # The serializer processes data before it is written to disk and after
-    # reading from disk.
-    attr_accessor :serializer
+  # Create a new message in maildir with data.
+  # The message is first written to the tmp dir, then moved to new. This is
+  # a shortcut for:
+  #   message = Maildir::Message.new(maildir)
+  #   message.write(data)
+  def self.create(maildir, data)
+    message = self.new(maildir)
+    message.write(data)
+    message
   end
 
+  # The serializer processes data before it is written to disk and after
+  # reading from disk.
   # Default serializer
-  @serializer = Maildir::Serializer::Base.new
+  @@serializer = Maildir::Serializer::Base.new
 
-  attr_reader :dir, :unique_name, :info, :old_key
+  # Get the serializer
+  def self.serializer
+    @@serializer
+  end
+
+  # Set the serializer
+  def self.serializer=(serializer)
+    @@serializer = serializer
+  end
+
+  attr_reader :dir, :unique_name, :info
 
   # Create a new, unwritten message or instantiate an existing message.
   # If key is nil, create a new message:
@@ -69,7 +75,7 @@ class Maildir::Message
 
   # Returns the class' serializer
   def serializer
-    self.class.serializer
+    @@serializer
   end
 
   # Writes data to disk. Can only be called on messages instantiated without
@@ -93,7 +99,7 @@ class Maildir::Message
   end
 
   # Set info on a message.
-  # Returns the message's key
+  # Returns the message's key if successful, false otherwise.
   def info=(info)
     raise "Can only set info on cur messages" unless :cur == @dir
     rename(:cur, info)
@@ -123,15 +129,19 @@ class Maildir::Message
   end
 
   # Sets the flags on a message.
-  # Returns the message's key
+  # Returns the message's key if successful, false otherwise.
   def flags=(*flags)
     self.info = INFO + sort_flags(flags.flatten.join(''))
   end
 
+  # Adds a flag to a message.
+  # Returns the message's key if successful, false otherwise.
   def add_flag(flag)
     self.flags = (flags << flag.upcase)
   end
-  
+
+  # Removes a flag from a message.
+  # Returns the message's key if successful, false otherwise.
   def remove_flag(flag)
     self.flags = flags.delete_if{|f| f == flag.upcase}
   end
@@ -152,18 +162,54 @@ class Maildir::Message
     File.join(@maildir.path, key)
   end
 
-  # Returns the message's data from disk
+  # Returns the message's data from disk.
+  # If the path doesn't exist, freeze's the object and raises Errno:ENOENT
   def data
-    serializer.load(path)
+    guard(true) { serializer.load(path) }
+  end
+
+  # Updates the modification and access time. Returns 1 if successful, false
+  # otherwise.
+  def utime(atime, mtime)
+    guard { File.utime(atime, mtime, path) }
+  end
+
+  # Returns the message's atime, or false if the file doesn't exist.
+  def atime
+    guard { File.atime(path) }
+  end
+
+  # Returns the message's mtime, or false if the file doesn't exist.
+  def mtime
+    guard { File.mtime(path) }
   end
 
   # Deletes the message path and freezes the message object
   def destroy
-    File.delete(path)
+    guard { File.delete(path) }
     freeze
   end
 
   protected
+
+  # Guard access to the file system by rescuing Errno::ENOENT, which happens
+  # if the file is missing. When +blocks+ fails and +reraise+ is false, returns
+  # false, otherwise reraises Errno::ENOENT
+  def guard(reraise = false, &block)
+    begin
+      yield
+    rescue Errno::ENOENT
+      if @old_key
+        # Restore ourselves to the old state
+        parse_key(@old_key)
+      end
+
+      # Don't allow further modifications
+      freeze
+
+      reraise ? raise : false
+    end
+  end
 
   # Sets dir, unique_name, and info based on the key
   def parse_key(key)
@@ -178,24 +224,22 @@ class Maildir::Message
   end
 
   def old_path
-    File.join(@maildir.path, old_key)
+    File.join(@maildir.path, @old_key)
   end
 
+  # Renames the message. Returns the new key if successful, false otherwise.
   def rename(new_dir, new_info=nil)
-    # Safe the old key so we can revert to the old state
+    # Save the old key so we can revert to the old state
     @old_key = key
 
     # Set the new state
     @dir = new_dir
     @info = new_info if new_info
 
-    begin
+    guard do
       File.rename(old_path, path) unless old_path == path
+      @old_key = nil # So guard() doesn't reset to a bad state
       return key
-    rescue Errno::ENOENT
-      # Restore ourselves to the old state
-      parse_key(@old_key)
-      raise
     end
   end
 end

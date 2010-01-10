@@ -147,6 +147,27 @@ class TestMessage < Test::Unit::TestCase
     end
   end
 
+  context "A message with a bad path" do
+    setup do
+      @message = temp_maildir.add("")
+      File.delete(@message.path)
+    end
+
+    should "raise error for data" do
+      assert_raise Errno::ENOENT do
+        @message.data
+      end
+      assert @message.frozen?
+    end
+
+    should "return not be processed" do
+      old_key = @message.key
+      assert_equal false, @message.process
+      assert @message.frozen?
+      assert_equal old_key, @message.key
+    end
+  end
+
   context "Messages" do
     setup do
       @message1 = temp_maildir.add("")
@@ -166,4 +187,17 @@ class TestMessage < Test::Unit::TestCase
     end
   end
 
+  context "Message#utime" do
+    should "update the messages atime and mtime" do
+      @message = temp_maildir.add("")
+      atime = Time.now - 30
+      mtime = Time.now - 60
+
+      @message.utime(atime, mtime)
+
+      # Times should be within 1 second of each other
+      assert_in_delta atime, @message.atime, 1
+      assert_in_delta mtime, @message.mtime, 1
+    end
+  end
 end
