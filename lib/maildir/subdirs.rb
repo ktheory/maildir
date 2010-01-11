@@ -1,15 +1,16 @@
 # implements subdirs as used by the Courier Mail Server (courier-mta.org)
+require 'maildir'
 module Maildir::Subdirs
   ROOT_NAME = 'INBOX'
   DELIM = '.'
-  
+
   def self.included(base)
     base.instance_eval do 
       alias_method :inspect_without_subdirs, :inspect
       alias_method :inspect, :inspect_with_subdirs
     end
   end
-  
+
   def create_subdir(name)
     raise ArgumentError.new("'name' may not contain delimiter character (#{DELIM})") if name.include?(DELIM)
     full_name = (root? ? [] : subdir_parts(File.basename(path))).push(name).unshift('').join(DELIM)
@@ -17,12 +18,12 @@ module Maildir::Subdirs
     @subdirs << md if @subdirs
     md
   end
-  
+
   # returns the logical mailbox path
   def mailbox_path
     @mailbox_path ||= root? ? ROOT_NAME : subdir_parts(File.basename(path)).unshift(ROOT_NAME).join(DELIM)
   end
-  
+
   # returns an array of Maildir objects representing the direct subdirectories of this Maildir
   def subdirs(only_direct=true)
     if root?
@@ -39,7 +40,7 @@ module Maildir::Subdirs
   def inspect_with_subdirs
     "#<#{self.class} path=#{@path} mailbox_path=#{mailbox_path}>"
   end
-  
+
   # returns the Maildir representing the root directory
   def root
     root? ? self : Maildir.new(File.dirname(path), false)
@@ -49,9 +50,9 @@ module Maildir::Subdirs
   def root?
     ! ((Dir.entries(File.dirname(path)) & %w(cur new tmp)).size == 3)
   end
-  
+
   private
-  
+
   def subdir_parts(path)
     parts = (path.split(DELIM) - [''])
     # some clients (e.g. Thunderbird) mess up namespaces so subdirs

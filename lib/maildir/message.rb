@@ -105,7 +105,7 @@ class Maildir::Message
     rename(:cur, info)
   end
 
-  FLAG_NAMES = { 
+  FLAG_NAMES = {
     :passed => 'P',
     :replied => 'R',
     :seen => 'S',
@@ -113,16 +113,16 @@ class Maildir::Message
     :draft => 'D',
     :flagged => 'F'
   }
-  
+
   FLAG_NAMES.each_pair do |key, value|
-    define_method("#{key}?".to_sym) do 
+    define_method("#{key}?".to_sym) do
       flags.include?(value)
     end
-    define_method("#{key}!".to_sym) do 
+    define_method("#{key}!".to_sym) do
       add_flag(value)
     end
   end
-  
+
   # Returns an array of single letter flags applied to the message
   def flags
     @info.sub(INFO,'').split('')
@@ -145,7 +145,6 @@ class Maildir::Message
   def remove_flag(flag)
     self.flags = flags.delete_if{|f| f == flag.upcase}
   end
-
 
   # Returns the filename of the message
   def filename

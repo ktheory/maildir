@@ -2,11 +2,12 @@
 # see http://www.courier-mta.org/imap/README.imapkeywords.html for details
 
 require 'ftools'
+require 'maildir'
 module Maildir::Keywords
   def self.included(base)
     Maildir::Message.send(:include, MessageExtension)
   end
-  
+
   # process contents of courierimapkeywords/ directory as described in README.imapkeywords
   def read_keywords
     messages = (list(:cur) + list(:new)).inject({}) { |m, msg| m[msg.unique_name] = msg ; m }
@@ -73,25 +74,25 @@ module Maildir::Keywords
     }
     File.move(tmp_file, File.join(keyword_dir, ':list'))
   end
-  
+
   def keywords(key)
     read_keywords unless @keywords
     @keywords[key] || []
   end
-  
+
   module MessageExtension
     def keywords
       return @keywords if @keywords
       @maildir.keywords(unique_name)
     end
-    
+
     # sets given keywords on the message.
     def keywords=(list)
       tmp_fname = File.join(maildir.path, 'tmp', unique_name)
       File.open(tmp_fname, 'w') { |f| f.write(list.join("\n")) }
       File.move(tmp_fname, File.join(maildir.path, 'courierimapkeywords', unique_name))
     end
-    
+
     # sets @keywords to the given list
     def set_keywords(list)
       @keywords = list
