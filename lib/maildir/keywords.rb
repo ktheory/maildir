@@ -7,16 +7,22 @@ module Maildir::Keywords
   def self.included(base)
     Maildir::Message.send(:include, MessageExtension)
   end
+  
+  def keyword_dir
+    @keyword_dir ||= File.join(path, 'courierimapkeywords')
+    Dir.mkdir(@keyword_dir) unless File.directory?(@keyword_dir)
+    return @keyword_dir
+  end
 
   # process contents of courierimapkeywords/ directory as described in README.imapkeywords
   def read_keywords
     messages = (list(:cur) + list(:new)).inject({}) { |m, msg| m[msg.unique_name] = msg ; m }
     t = Time.now.to_i / 300
-    keyword_dir = File.join(path, 'courierimapkeywords')
     keywords = []
     state = :head
     # process :list
-    File.open(File.join(keyword_dir, ':list')).each_line do |line|
+    list_file = File.join(keyword_dir, ':list')
+    File.open(list_file).each_line do |line|
       line.strip!
       if state == :head
         if line.empty?
@@ -30,7 +36,7 @@ module Maildir::Keywords
           msg.set_keywords(ids.split(/\s/).map {|id| keywords[id.to_i - 1] })
         end
       end
-    end
+    end if File.exist?(list_file)
     # collect keyword files
     keyword_files = (Dir.entries(keyword_dir) - %w(. .. :list)).inject({}) do |keyword_files, file|
       if file =~ /^\.(\d+)\.(.*)$/
@@ -49,13 +55,15 @@ module Maildir::Keywords
           File.unlink(fname)
         end
       end
+      next(keyword_files)
     end
     # process keyword files
     keyword_files.each_pair do |key, files|
       files.sort! { |a, b| a[0] <=> b[0] }
-      files[0..-2].each { |f| File.unlink(File.join(keyword_dir, ".#{f.join('.')}")) } if n_files.last[0] < t
+      files[0..-2].each { |f| File.unlink(File.join(keyword_dir, ".#{f.join('.')}")) } if files.last[0] < t
       msg = messages[key]
-      current_keywords = File.read(files.last).read.split(/\s+/)
+      file = (File.exist?(File.join(keyword_dir, files.last[1])) ? files.last[1] : ".#{files.last.join('.')}")
+      current_keywords = File.read(File.join(keyword_dir, file)).split(/\s+/)
       msg.set_keywords(current_keywords)
       if (add = (current_keywords - keywords)).any?
         keywords += add
@@ -72,7 +80,7 @@ module Maildir::Keywords
         @keywords[key] = msg.keywords
       end
     }
-    File.move(tmp_file, File.join(keyword_dir, ':list'))
+    File.move(tmp_file, list_file)
   end
 
   def keywords(key)
@@ -88,9 +96,9 @@ module Maildir::Keywords
 
     # sets given keywords on the message.
     def keywords=(list)
-      tmp_fname = File.join(maildir.path, 'tmp', unique_name)
+      tmp_fname = File.join(@maildir.path, 'tmp', unique_name)
       File.open(tmp_fname, 'w') { |f| f.write(list.join("\n")) }
-      File.move(tmp_fname, File.join(maildir.path, 'courierimapkeywords', unique_name))
+      File.move(tmp_fname, File.join(@maildir.keyword_dir, unique_name))
     end
 
     # sets @keywords to the given list

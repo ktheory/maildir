@@ -36,7 +36,7 @@ class TestMaildir < Test::Unit::TestCase
 
       should "list the message in it's keys" do
         messages = temp_maildir.list(:new)
-        assert_equal messages, [@message]
+        assert messages.include?(@message)
       end
     end
   end
