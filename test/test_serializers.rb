@@ -1,11 +1,4 @@
 require 'test_helper'
-
-# Require all the serializers
-path = File.join(File.dirname(__FILE__), "..","lib","maildir","serializer","*")
-Dir.glob(path).each do |file|
-  require file
-end
-
 class TestSerializers < Test::Unit::TestCase
 
   serializers = [
@@ -18,6 +11,7 @@ class TestSerializers < Test::Unit::TestCase
   serializers.each do |klass, dumper|
     context "A message serialized with #{klass}" do
       setup do
+        FakeFS::FileSystem.clear
         @data = case klass.new
         when Maildir::Serializer::Mail
           Mail.new

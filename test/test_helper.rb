@@ -1,21 +1,23 @@
 require 'rubygems'
 require 'test/unit'
 require 'shoulda'
-require 'tmpdir'
-require 'tempfile'
 require 'fileutils'
 require 'maildir'
 
+# Require all the serializers
+serializers = File.join(File.dirname(__FILE__), "..","lib","maildir","serializer","*")
+Dir.glob(serializers).each do |serializer|
+  require serializer
+end
+
+# Require 'ktheory-fakefs' until issues 28, 29, and 30 are resolved in
+# defunkt/fakefs. See http://github.com/defunkt/fakefs/issues
+gem "ktheory-fakefs"
+require 'fakefs'
+
 # Create a reusable maildir that's cleaned up when the tests are done
 def temp_maildir
-  return $maildir if $maildir
-  
-  dir_path = Dir.mktmpdir("maildir_test")
-  at_exit do
-    puts "Cleaning up temp maildir"
-    FileUtils.rm_r(dir_path)
-  end
-  $maildir = Maildir.new(dir_path)
+  Maildir.new("/tmp/maildir_test")
 end
 
 # Useful for testing that strings defined & not empty

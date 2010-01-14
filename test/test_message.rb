@@ -3,11 +3,8 @@ class TestMessage < Test::Unit::TestCase
 
   context "An new, unwritten message" do
     setup do
+      FakeFS::FileSystem.clear
       @message = Maildir::Message.new(temp_maildir)
-    end
-
-    should "be instantiated" do
-      assert @message
     end
 
     should "be in :tmp" do
@@ -32,123 +29,123 @@ class TestMessage < Test::Unit::TestCase
         @message.info= "2,FRS"
       end
     end
-
-    context "when written with a string" do
-      setup do
-        @data = "foo\n"
-        @message.write(@data)
-      end
-
-      should "not be writable" do
-        assert_raise RuntimeError do
-          @message.write("nope!")
-        end
-      end
-
-      should "have no info" do
-        assert_nil @message.info
-      end
-
-      should "not be able to set info" do
-        assert_raises RuntimeError do
-          @message.info= "2,FRS"
-        end
-      end
-
-      should "be in new dir" do
-        assert_equal :new, @message.dir
-        assert_match(/new/, @message.path)
-      end
-
-      should "have have a file" do
-        assert File.exists?(@message.path)
-      end
-
-      should "have the correct data" do
-        assert_equal @data, @message.data
-      end
-    end
   end
 
-  context "A created message" do
+  context "A written message" do
     setup do
-      @data = "foo\n"
-      @message = Maildir::Message.create(temp_maildir, @data)
+      FakeFS::FileSystem.clear
+      @message = Maildir::Message.new(temp_maildir)
+      @data = "foo"
+      @message.write(@data)
+    end
+
+    should "not be writable" do
+      assert_raise RuntimeError do
+        @message.write("nope!")
+      end
+    end
+
+    should "have no info" do
+      assert_nil @message.info
+    end
+
+    should "not be able to set info" do
+      assert_raises RuntimeError do
+        @message.info= "2,FRS"
+      end
+    end
+
+    should "be in new" do
+      assert_equal :new, @message.dir
+      assert_match(/new/, @message.path)
+    end
+
+    should "have a file" do
+      assert File.exists?(@message.path)
     end
 
     should "have the correct data" do
       assert_equal @data, @message.data
     end
+  end
 
-    context "when processed" do
-      setup do
-        @message.process
+  context "A processed message" do
+    setup do
+      FakeFS::FileSystem.clear
+      @data = "foo"
+      @message = Maildir::Message.create(temp_maildir, @data)
+      @message.process
+    end
+
+    should "not be writable" do
+      assert_raise RuntimeError do
+        @message.write("nope!")
       end
+    end
 
-      should "not be writable" do
-        assert_raise RuntimeError do
-          @message.write("nope!")
-        end
+    should "be in cur" do
+      assert_equal :cur, @message.dir
+    end
+
+    should "have info" do
+      assert_equal Maildir::Message::INFO, @message.info
+    end
+
+    should "set info" do
+      info = "2,FRS"
+      @message.info = "2,FRS"
+      assert_equal @message.info, info
+      assert_match /#{info}$/, @message.path
+    end
+
+    should "add and remove flags" do
+      @message.add_flag('S')
+      assert_equal ['S'], @message.flags
+
+      # Test lowercase
+      @message.add_flag('r')
+      assert_equal ['R', 'S'], @message.flags
+
+      @message.remove_flag('S')
+      assert_equal ['R'], @message.flags
+
+      # Test lowercase
+      @message.remove_flag('r')
+      assert_equal [], @message.flags
+    end
+
+    flag_tests = {
+      "FRS" => ['F', 'R', 'S'],
+      "Sr" => ['R', 'S'], # test capitalization & sorting
+      '' => []
+    }
+    flag_tests.each do |arg, results|
+      should "set flags: #{arg}" do
+        @message.flags = arg
+        assert_equal results, @message.flags
+        path_suffix = "#{Maildir::Message::INFO}#{results.join('')}"
+        assert_match /#{path_suffix}$/, @message.path
       end
+    end
+  end
 
-      should "be in cur" do
-        assert_equal :cur, @message.dir
-      end
-
-      should "have info" do
-        assert_equal Maildir::Message::INFO, @message.info
-      end
-
-      should "set info" do
-        info = "2,FRS"
-        @message.info = "2,FRS"
-        assert_equal @message.info, info
-        assert_match /#{info}$/, @message.path
-      end
-
-      should "add and remove flags" do
-        @message.add_flag('S')
-        assert_equal ['S'], @message.flags
-
-        # Test lowercase
-        @message.add_flag('r')
-        assert_equal ['R', 'S'], @message.flags
-
-        @message.remove_flag('S')
-        assert_equal ['R'], @message.flags
-
-        # Test lowercase
-        @message.remove_flag('r')
-        assert_equal [], @message.flags
-      end
-
-      flag_tests = {
-        "FRS" => ['F', 'R', 'S'],
-        "Sr" => ['R', 'S'], # test capitalization & sorting
-        '' => []
-      }
-      flag_tests.each do |arg, results|
-        should "set flags: #{arg}" do
-          @message.flags = arg
-          assert_equal results, @message.flags
-          path_suffix = "#{Maildir::Message::INFO}#{results.join('')}"
-          assert_match /#{path_suffix}$/, @message.path
-        end
-      end
-      context "when destroyed" do
-        setup { @message.destroy }
-        should "be frozen" do
-          assert @message.frozen?, "Message is not frozen"
-        end
-        should "have a nonexistant path" do
-          assert !File.exists?(@message.path), "Message path exists"
-        end
-      end
+  context "A destroyed message" do
+    setup do
+      FakeFS::FileSystem.clear
+      @message = Maildir::Message.create(temp_maildir, "foo")
+      @message.destroy
+    end
+    should "be frozen" do
+      assert @message.frozen?, "Message is not frozen"
+    end
+    should "have a nonexistant path" do
+      assert !File.exists?(@message.path), "Message path exists"
     end
   end
 
   context "A message with a bad path" do
     setup do
+      FakeFS::FileSystem.clear
       @message = temp_maildir.add("")
       File.delete(@message.path)
     end
@@ -160,44 +157,70 @@ class TestMessage < Test::Unit::TestCase
       assert @message.frozen?
     end
 
-    should "return not be processed" do
+    should "not be processed" do
       old_key = @message.key
       assert_equal false, @message.process
       assert @message.frozen?
+    end
+
+
+    should "reset to the old key after attempt to process" do
+      old_key = @message.key
+      @message.process
       assert_equal old_key, @message.key
     end
   end
 
-  context "Messages" do
+  context "Different messages" do
     setup do
-      @message1 = temp_maildir.add("")
+      FakeFS::FileSystem.clear
     end
 
     should "differ" do
-      @message2 = Maildir::Message.new(temp_maildir)
+      @message1 = temp_maildir.add("")
+      @message2 = temp_maildir.add("")
       assert_equal -1, @message1 <=> @message2
       assert_equal 1,  @message2 <=> @message1
       assert_not_equal @message1, @message2
+    end
+  end
 
+  context "Identical messages" do
+    setup do
+      FakeFS::FileSystem.clear
     end
 
     should "be identical" do
+      @message1 = temp_maildir.add("")
       another_message1 = temp_maildir.get(@message1.key)
       assert_equal @message1, another_message1
     end
   end
 
   context "Message#utime" do
-    should "update the messages atime and mtime" do
-      @message = temp_maildir.add("")
-      atime = Time.now - 30
-      mtime = Time.now - 60
-
-      @message.utime(atime, mtime)
-
-      # Times should be within 1 second of each other
-      assert_in_delta atime, @message.atime, 1
-      assert_in_delta mtime, @message.mtime, 1
+    setup do
+      FakeFS::FileSystem.clear
     end
+
+    should "update the messages mtime" do
+      @message = temp_maildir.add("")
+      time = Time.now - 60
+
+      @message.utime(time, time)
+
+      # Time should be within 1 second of each other
+      assert_in_delta time, @message.mtime, 1
+    end
+
+    # atime not currently supported in FakeFS
+    # should "update the messages atime" do
+    #   @message = temp_maildir.add("")
+    #   time = Time.now - 60
+    #
+    #   @message.utime(time, time)
+    #
+    #   # Time should be within 1 second of each other
+    #   assert_in_delta time, @message.atime, 1
+    # end
   end
 end

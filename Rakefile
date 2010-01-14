@@ -19,6 +19,7 @@ begin
     gemspec.add_development_dependency "shoulda", ">= 0"
     gemspec.add_development_dependency "mail", ">= 0"
     gemspec.add_development_dependency "json", ">= 0"
+    gemspec.add_development_dependency "ktheory-fakefs", ">= 0"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
