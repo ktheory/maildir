@@ -17,6 +17,13 @@ class TestMaildir < Test::Unit::TestCase
       end
     end
 
+    should "expand paths" do
+      maildir = Maildir.new("~/test_maildir/")
+      expanded_path = File.expand_path("~/test_maildir")
+      expanded_path = File.join(expanded_path, "/")
+      assert_equal expanded_path, maildir.path
+    end
+
     should "not create directories if specified" do
       maildir = Maildir.new("/maildir_without_subdirs", false)
       %w(tmp new cur).each do |subdir|

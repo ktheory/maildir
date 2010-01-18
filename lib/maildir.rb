@@ -11,7 +11,8 @@ class Maildir
   # Create a new maildir at +path+. If +create+ is true, will ensure that the
   # required subdirectories exist.
   def initialize(path, create = true)
-    @path = File.join(path, '/') # Ensure path has a trailing slash
+    @path = File.expand_path(path)
+    @path = File.join(@path, '/') # Ensure path has a trailing slash
     @path_regexp = /^#{Regexp.quote(@path)}/ # For parsing directory listings
     create_directories if create
   end
@@ -43,7 +44,8 @@ class Maildir
   # exist.
   def create_directories
     SUBDIRS.each do |subdir|
-      FileUtils.mkdir_p(self.send("#{subdir}_path"))
+      subdir_path = File.join(path, subdir.to_s)
+      FileUtils.mkdir_p(subdir_path)
     end
   end
 
