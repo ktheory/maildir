@@ -30,7 +30,7 @@ def setup_subdirs(maildir)
   end
 end
 
-# Useful for testing that strings defined & not empty
+# Test that objects are neither nil nor empty
 def assert_not_empty(obj, msg='')
   assert !obj.nil? && !obj.empty?, msg
 end

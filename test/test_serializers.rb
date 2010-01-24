@@ -16,7 +16,7 @@ class TestSerializers < Test::Unit::TestCase
         when Maildir::Serializer::Mail
           Mail.new
         else
-          # Test a few common data structures
+          # Test a few common types
           [1, nil, {"foo" => true}]
         end
 
