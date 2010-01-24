@@ -104,9 +104,9 @@ It's trivial to create a custom serializer. Implement the following two methods:
   load(path)
   dump(data, path)
 
-== Credits
+== Contributors
 
-niklas | brueckenschlaeger, http://github.com/nilclass added subdir & courierimapkeywords support
+Niklas E. Cathor (http://github.com/nilclass) added subdir & courierimapkeywords support
 
 == Copyright
 
