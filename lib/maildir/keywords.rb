@@ -1,13 +1,12 @@
 # implements IMAP Keywords as used by the Courier Mail Server
 # see http://www.courier-mta.org/imap/README.imapkeywords.html for details
 
-require 'ftools'
 require 'maildir'
 module Maildir::Keywords
   def self.included(base)
     Maildir::Message.send(:include, MessageExtension)
   end
-  
+
   def keyword_dir
     @keyword_dir ||= File.join(path, 'courierimapkeywords')
     Dir.mkdir(@keyword_dir) unless File.directory?(@keyword_dir)
@@ -45,7 +44,7 @@ module Maildir::Keywords
       else
         n = t + 1
         key = file
-        File.move(File.join(keyword_dir, file), File.join(keyword_dir, ".#{n}.#{key}"))
+        FileUtils.mv(File.join(keyword_dir, file), File.join(keyword_dir, ".#{n}.#{key}"))
       end
       if msg = messages[key]
         (keyword_files[key] ||= []) << [n, key]
@@ -80,7 +79,7 @@ module Maildir::Keywords
         @keywords[key] = msg.keywords
       end
     }
-    File.move(tmp_file, list_file)
+    FileUtils.mv(tmp_file, list_file)
   end
 
   def keywords(key)
@@ -98,7 +97,7 @@ module Maildir::Keywords
     def keywords=(list)
       tmp_fname = File.join(@maildir.path, 'tmp', unique_name)
       File.open(tmp_fname, 'w') { |f| f.write(list.join("\n")) }
-      File.move(tmp_fname, File.join(@maildir.keyword_dir, unique_name))
+      FileUtils.mv(tmp_fname, File.join(@maildir.keyword_dir, unique_name))
     end
 
     # sets @keywords to the given list
