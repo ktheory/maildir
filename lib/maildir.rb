@@ -2,7 +2,6 @@ require 'fileutils' # For create_directories
 class Maildir
 
   SUBDIRS = [:tmp, :new, :cur].freeze
-  READABLE_DIRS = SUBDIRS.reject{|s| :tmp == s}.freeze
 
   include Comparable
 
