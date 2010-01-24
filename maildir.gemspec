@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{maildir}
-  s.version = "0.4.1"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aaron Suggs", "Niklas E. Cathor"]
@@ -48,13 +48,13 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Read & write messages in the maildir format}
   s.test_files = [
-    "test/test_serializers.rb",
+    "test/test_helper.rb",
      "test/test_keywords.rb",
-     "test/test_helper.rb",
-     "test/test_subdirs.rb",
+     "test/test_maildir.rb",
      "test/test_message.rb",
-     "test/test_unique_name.rb",
-     "test/test_maildir.rb"
+     "test/test_serializers.rb",
+     "test/test_subdirs.rb",
+     "test/test_unique_name.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -79,3 +79,4 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<ktheory-fakefs>, [">= 0"])
   end
 end
+
