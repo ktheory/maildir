@@ -15,7 +15,7 @@ begin
     gemspec.description = "A ruby library for reading and writing arbitrary messages in DJB's maildir format"
     gemspec.email = "aaron@ktheory.com"
     gemspec.homepage = "http://github.com/ktheory/maildir"
-    gemspec.authors = ["Aaron Suggs"]
+    gemspec.authors = ["Aaron Suggs", "Niklas E. Cathor"]
     gemspec.add_development_dependency "shoulda", ">= 0"
     gemspec.add_development_dependency "mail", ">= 0"
     gemspec.add_development_dependency "json", ">= 0"
