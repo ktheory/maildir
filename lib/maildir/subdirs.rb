@@ -11,6 +11,10 @@ module Maildir::Subdirs
     end
   end
 
+  def name
+    root? ? ROOT_NAME : subdir_parts(path).last
+  end
+
   def create_subdir(name)
     raise ArgumentError.new("'name' may not contain delimiter character (#{DELIM})") if name.include?(DELIM)
     full_name = (root? ? [] : subdir_parts(File.basename(path))).push(name).unshift('').join(DELIM)
@@ -54,6 +58,7 @@ module Maildir::Subdirs
   private
 
   def subdir_parts(path)
+    path.sub!(/\/$/, '') # remove trailing slash
     parts = (path.split(DELIM) - [''])
     # some clients (e.g. Thunderbird) mess up namespaces so subdirs
     # end up looking like '.INBOX.Trash' instead of '.Trash'

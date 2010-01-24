@@ -17,7 +17,19 @@ require 'fakefs'
 
 # Create a reusable maildir that's cleaned up when the tests are done
 def temp_maildir
-  Maildir.new("/tmp/maildir_test")
+    Maildir.new("/tmp/maildir_test")
+end
+
+# create the subdir tree:
+# | INBOX
+# |-- a
+# | |-- x
+# | |-- y
+# |-- b
+def setup_subdirs(maildir)
+  %w(a b a.x a.y).each do |x|
+    Maildir.new(File.join(maildir.path, ".#{x}"))
+  end
 end
 
 # Useful for testing that strings defined & not empty
