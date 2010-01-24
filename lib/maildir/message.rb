@@ -45,16 +45,13 @@ class Maildir::Message
     @maildir = maildir
     if key.nil?
       @dir = :tmp
+      @unique_name = Maildir::UniqueName.create
     else
       parse_key(key)
     end
 
     unless Maildir::SUBDIRS.include? dir
       raise ArgumentError, "State must be in #{Maildir::SUBDIRS.inspect}"
-    end
-
-    if :tmp == dir
-      @unique_name = Maildir::UniqueName.create
     end
   end
 

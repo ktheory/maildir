@@ -11,7 +11,9 @@ class Maildir
   # Create a new maildir at +path+. If +create+ is true, will ensure that the
   # required subdirectories exist.
   def initialize(path, create = true)
-    @path = File.join(path, '/') # Ensure path has a trailing slash
+    @path = File.expand_path(path)
+    @path = File.join(@path, '/') # Ensure path has a trailing slash
+    @path_regexp = /^#{Regexp.quote(@path)}/ # For parsing directory listings
     create_directories if create
   end
 
@@ -42,7 +44,8 @@ class Maildir
   # exist.
   def create_directories
     SUBDIRS.each do |subdir|
-      FileUtils.mkdir_p(self.send("#{subdir}_path"))
+      subdir_path = File.join(path, subdir.to_s)
+      FileUtils.mkdir_p(subdir_path)
     end
   end
 
@@ -52,13 +55,12 @@ class Maildir
   # E.g.
   #  maildir.list(:new) # => all new messages
   #  maildir.list(:cur, :limit => 10) # => 10 oldest messages in cur
-  def list(new_or_cur, options = {})
-    new_or_cur = new_or_cur.to_sym
-    unless [:new, :cur].include? new_or_cur
-      raise ArgumentError, "first arg must be new or cur"
+  def list(dir, options = {})
+    unless SUBDIRS.include? dir.to_sym
+      raise ArgumentError, "dir must be :new, :cur, or :tmp"
     end
 
-    keys = get_dir_listing(new_or_cur)
+    keys = get_dir_listing(dir)
 
     # Sort the keys (chronological order)
     # TODO: make sorting configurable
@@ -89,15 +91,22 @@ class Maildir
     get(key).destroy
   end
 
-  protected
-  def get_dir_listing(new_or_cur)
-    search_path = File.join(self.path, new_or_cur.to_s, '*')
-    results = Dir.glob(search_path)
+  # Finds messages in the tmp folder that have not been modified since
+  # +time+. +time+ defaults to 36 hours ago.
+  def get_stale_tmp(time = Time.now - 129600)
+    list(:tmp).select do |message|
+      (mtime = message.mtime) && mtime < time
+    end
+  end
 
-    # Remove the maildir's path from the beginning of the message path
-    @dir_listing_regexp ||= /^#{Regexp.quote(self.path)}/
-    results.each do |message_path|
-      message_path.sub!(@dir_listing_regexp, "")
+  protected
+  # Returns an array of keys in dir
+  def get_dir_listing(dir)
+    search_path = File.join(self.path, dir.to_s, '*')
+    keys = Dir.glob(search_path)
+    #  Remove the maildir's path from the keys
+    keys.each do |key|
+      key.sub!(@path_regexp, "")
     end
   end
 end
