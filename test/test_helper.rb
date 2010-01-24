@@ -15,7 +15,7 @@ require 'fakefs'
 
 # Create a reusable maildir that's cleaned up when the tests are done
 def temp_maildir
-    Maildir.new("/tmp/maildir_test")
+  Maildir.new("/tmp/maildir_test")
 end
 
 # create the subdir tree:
