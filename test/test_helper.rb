@@ -1,7 +1,5 @@
-require 'rubygems'
 require 'test/unit'
 require 'shoulda'
-require 'fileutils'
 require 'maildir'
 
 # Require all the serializers
