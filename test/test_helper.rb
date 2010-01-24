@@ -18,17 +18,6 @@ require 'fakefs'
 # Create a reusable maildir that's cleaned up when the tests are done
 def temp_maildir
     Maildir.new("/tmp/maildir_test")
-#   return $maildir if $maildir
-
-
-#   dir_path = Dir.mktmpdir("maildir_test")
-# #  at_exit do
-# #    puts "Cleaning up temp maildir"
-# #    FileUtils.rm_r(dir_path)
-# #  end
-#   $maildir = Maildir.new(dir_path)
-#   setup_subdirs if defined?(Maildir::Subdirs)
-#   return $maildir
 end
 
 # create the subdir tree:
@@ -37,9 +26,9 @@ end
 # | |-- x
 # | |-- y
 # |-- b
-def setup_subdirs
+def setup_subdirs(maildir)
   %w(a b a.x a.y).each do |x|
-    Maildir.new(File.join($maildir.path, ".#{x}"))
+    Maildir.new(File.join(maildir.path, ".#{x}"))
   end
 end
 
