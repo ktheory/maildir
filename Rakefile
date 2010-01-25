@@ -30,3 +30,8 @@ desc "Run benchmarks"
 task :bench do
   load File.join(File.dirname(__FILE__), "benchmarks", "runner")
 end
+
+desc "Remove trailing whitespace"
+task :whitespace do
+  sh %{find . -name '*.rb' -exec sed -i '' 's/ *$//g' {} \\;}
+end

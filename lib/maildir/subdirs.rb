@@ -5,7 +5,7 @@ module Maildir::Subdirs
   DELIM = '.'
 
   def self.included(base)
-    base.instance_eval do 
+    base.instance_eval do
       alias_method :inspect_without_subdirs, :inspect
       alias_method :inspect, :inspect_with_subdirs
     end
@@ -39,7 +39,7 @@ module Maildir::Subdirs
       @subdirs ||= root.subdirs(false).select { |md| subdir_parts(File.basename(md.path))[0..-2] == my_parts }
     end
   end
-  
+
   # Friendly inspect method
   def inspect_with_subdirs
     "#<#{self.class} path=#{@path} mailbox_path=#{mailbox_path}>"
