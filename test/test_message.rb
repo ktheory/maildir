@@ -148,7 +148,7 @@ class TestMessage < Test::Unit::TestCase
     should "return 1" do
       assert_equal 1, @message.destroy
     end
-    
+
     should "return false if the path doesn't exist" do
       File.delete(@message.path)
       assert_equal false, @message.destroy
@@ -225,14 +225,14 @@ class TestMessage < Test::Unit::TestCase
     end
 
     # atime not currently supported in FakeFS
-    # should "update the messages atime" do
-    #   @message = temp_maildir.add("")
-    #   time = Time.now - 60
-    #
-    #   @message.utime(time, time)
-    #
-    #   # Time should be within 1 second of each other
-    #   assert_in_delta time, @message.atime, 1
-    # end
+    should_eventually "update the messages atime" do
+      @message = temp_maildir.add("")
+      time = Time.now - 60
+
+      @message.utime(time, time)
+
+      # Time should be within 1 second of each other
+      assert_in_delta time, @message.atime, 1
+    end
   end
 end
