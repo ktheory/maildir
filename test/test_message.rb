@@ -129,17 +129,29 @@ class TestMessage < Test::Unit::TestCase
     end
   end
 
-  context "A destroyed message" do
+  context "Destroying a message" do
     setup do
       FakeFS::FileSystem.clear
       @message = Maildir::Message.create(temp_maildir, "foo")
-      @message.destroy
     end
-    should "be frozen" do
+
+    should "freeze it" do
+      @message.destroy
       assert @message.frozen?, "Message is not frozen"
     end
-    should "have a nonexistant path" do
+
+    should "delete the path" do
+      @message.destroy
       assert !File.exists?(@message.path), "Message path exists"
+    end
+
+    should "return 1" do
+      assert_equal 1, @message.destroy
+    end
+    
+    should "return false if the path doesn't exist" do
+      File.delete(@message.path)
+      assert_equal false, @message.destroy
     end
   end
 

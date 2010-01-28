@@ -180,10 +180,11 @@ class Maildir::Message
     guard { File.mtime(path) }
   end
 
-  # Deletes the message path and freezes the message object
+  # Deletes the message path and freezes the message object.
+  # Returns 1 if the file was destroyed, false if the file was missings.
   def destroy
-    guard { File.delete(path) }
     freeze
+    guard { File.delete(path) }
   end
 
   protected
