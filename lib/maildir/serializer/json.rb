@@ -1,4 +1,4 @@
-require 'json'
+require 'yajl/json_gem'
 # Serialize messages as JSON
 class Maildir::Serializer::JSON < Maildir::Serializer::Base
   # Read data from path and parse it as JSON.

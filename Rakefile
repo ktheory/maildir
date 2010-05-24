@@ -18,7 +18,7 @@ begin
     gemspec.authors = ["Aaron Suggs", "Niklas E. Cathor"]
     gemspec.add_development_dependency "shoulda", ">= 0"
     gemspec.add_development_dependency "mail", ">= 0"
-    gemspec.add_development_dependency "json", ">= 0"
+    gemspec.add_development_dependency "yajl-ruby", ">= 0"
     gemspec.add_development_dependency "ktheory-fakefs", ">= 0"
   end
   Jeweler::GemcutterTasks.new
