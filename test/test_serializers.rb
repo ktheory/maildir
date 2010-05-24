@@ -1,7 +1,12 @@
 require 'test_helper'
 class TestSerializers < Test::Unit::TestCase
 
+
   serializers = [
+    # Test the base serializer with a string
+    [Maildir::Serializer::Base,    lambda {|data| data}],
+    # Test base serializer with IO object
+    [Maildir::Serializer::Base,    lambda {|data| s = StringIO.new(data); s.rewind; s}],
     [Maildir::Serializer::Mail,    lambda {|data| Mail.new(data).to_s}],
     [Maildir::Serializer::Marshal, lambda {|data| Marshal.dump(data)}],
     [Maildir::Serializer::JSON,    lambda {|data| JSON.dump(data)}],
@@ -15,6 +20,8 @@ class TestSerializers < Test::Unit::TestCase
         @data = case klass.new
         when Maildir::Serializer::Mail
           Mail.new
+        when Maildir::Serializer::Base
+          "Hello World!"
         else
           # Test a few common types
           [1, nil, {"foo" => true}]
@@ -30,7 +37,10 @@ class TestSerializers < Test::Unit::TestCase
       end
 
       should "have serialized data on disk" do
-        assert_equal dumper.call(@data), File.read(@message.path)
+        expected_data = dumper.call(@data)
+        # Read the expected_data if @data is an IO object
+        expected_data = expected_data.read if expected_data.respond_to?(:read)
+        assert_equal expected_data, File.read(@message.path)
       end
     end
   end
