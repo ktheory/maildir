@@ -73,7 +73,7 @@ By default, message data are written and read from disk as a string. It's often 
 
 The following serializers are included:
 
-* Maildir::Serializer::Base (the default)
+* Maildir::Serializer::Base (default)
 * Maildir::Serializer::Mail
 * Maildir::Serializer::Marshal
 * Maildir::Serializer::JSON
@@ -84,6 +84,13 @@ Maildir::Serializer::Base simply reads and writes strings to disk.
   Maildir::Message.serializer # => Maildir::Serializer::Base.new (by default)
   message = maildir.add("Hello World!") # writes "Hello World!" to disk
   message.data # => "Hello World!"
+
+As of version 0.7, the Maildir::Serializer::Base can write IO streams as well as strings. For example:
+
+  message.add(STDIN)
+
+This will use Ruby 1.9's more efficient IO.copy_stream method if available,
+and degrade gracefully in Ruby 1.8.
 
 The Mail serializer takes a ruby Mail object (http://github.com/mikel/mail) and writes RFC2822 email messages.
 
@@ -109,6 +116,7 @@ It's trivial to create a custom serializer. Implement the following two methods:
 == Contributors
 
 Niklas E. Cathor (http://github.com/nilclass) added subdir & courierimapkeywords support
+Ali Polatel (http://github.com/alip) for suggesting IO.copy_stream
 
 == Copyright
 

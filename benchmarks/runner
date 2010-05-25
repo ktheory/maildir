@@ -9,10 +9,11 @@ maildir = Maildir.new(maildir_path)
 n = 300
 message = "Write #{n} messages:"
 tms = Benchmark.bmbm(message.size) do |x|
-   x.report(message) { n.times { maildir.add(STDIN); STDIN.rewind } }
+   x.report(message) { n.times { maildir.add("") } }
 end
 
 puts "#{n/tms.first.real} messages per second"
+
 
 message = "List new:"
 tms = Benchmark.bm(message.size) do |x|
