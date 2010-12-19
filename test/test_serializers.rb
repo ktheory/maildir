@@ -14,17 +14,20 @@ class TestSerializers < Test::Unit::TestCase
   ]
 
   serializers.each do |klass, dumper|
-    context "A message serialized with #{klass}" do
+    # NB: dumper.object_id makes test names unique
+    context "A message serialized with #{klass} (#{dumper.object_id})" do
       setup do
         FakeFS::FileSystem.clear
         @data = case klass.new
         when Maildir::Serializer::Mail
           Mail.new
+        when Maildir::Serializer::Marshal, Maildir::Serializer::JSON, Maildir::Serializer::YAML
+          # Test a few common types
+          [1, nil, {"foo" => true}]
         when Maildir::Serializer::Base
           "Hello World!"
         else
-          # Test a few common types
-          [1, nil, {"foo" => true}]
+          raise "Unknown class #{klass.inspect}"
         end
 
         # Set the message serializer
