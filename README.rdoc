@@ -68,6 +68,19 @@ Delete the message from disk
   message.destroy # => returns the frozen message
   maildir.list(:cur) # => []
 
+=== Cleaning up from orphaned messages
+
+An expected (though rare) behavior is for partially-written messages to be
+orphaned in the tmp folder (when clients fail before fully writing a message).
+
+Find messages in tmp that haven't been changed in 36 hours:
+
+  maildir.get_stale_tmp
+
+Clean them up:
+
+  maildir.get_stale_tmp.each{|msg| msg.destroy}
+
 == Pluggable serializers
 
 By default, message data are written and read from disk as a string. It's often desirable to process the string into a useful object. Maildir supports configurable serializers to convert message data into a useful object.
