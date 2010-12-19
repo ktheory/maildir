@@ -45,19 +45,6 @@ class Maildir::UniqueName
     Socket.gethostname
   end
 
-  def secure_random(bytes=8)
-    # File.read("/dev/urandom", bytes).unpack("H*")[0]
-    raise "Not implemented"
-  end
-
-  def inode
-    raise "Not implemented"
-  end
-
-  def device_number
-    raise "Not implemented"
-  end
-
   def microsecond
     @now.usec.to_s
   end
