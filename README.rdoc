@@ -16,12 +16,13 @@ While the maildir format was created for email, it works well for arbitrary data
 
 == Install
 
- sudo gem install maildir
+ gem install maildir
 
 == Usage
 
 Create a maildir in /home/aaron/mail
 
+  require 'maildir'
   maildir = Maildir.new("/home/aaron/mail") # creates tmp, new, and cur dirs
   # call Maildir.new("/home/aaron/mail", false) to skip directory creation.
 
@@ -85,7 +86,7 @@ Maildir::Serializer::Base simply reads and writes strings to disk.
   message = maildir.add("Hello World!") # writes "Hello World!" to disk
   message.data # => "Hello World!"
 
-As of version 0.7, the Maildir::Serializer::Base can write IO streams as well as strings. For example:
+As of version 1.0.0, the Maildir::Serializer::Base can write IO streams as well as strings. For example:
 
   message.add(STDIN)
 
