@@ -3,7 +3,7 @@ require 'shoulda'
 require 'maildir'
 
 # Require all the serializers
-serializers = File.join(File.dirname(__FILE__), "..","lib","maildir","serializer","*.rb")
+serializers = File.join(".", File.dirname(__FILE__), "..","lib","maildir","serializer","*.rb")
 Dir.glob(serializers).each do |serializer|
   require serializer
 end
