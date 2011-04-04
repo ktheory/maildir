@@ -129,8 +129,9 @@ It's trivial to create a custom serializer. Implement the following two methods:
 
 == Contributors
 
-Niklas E. Cathor (http://github.com/nilclass) added subdir & courierimapkeywords support
-Ali Polatel (http://github.com/alip) for suggesting IO.copy_stream
+* Niklas E. Cathor (http://github.com/nilclass) added subdir & courierimapkeywords support
+* Ali Polatel (http://github.com/alip) for suggesting IO.copy_stream
+* Harry Vangberg (http://github.com/vangberg) for fixing tests in ruby 1.9
 
 == Copyright
 
