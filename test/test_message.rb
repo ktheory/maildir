@@ -8,11 +8,7 @@ class TestMessage < Test::Unit::TestCase
       @message = Maildir::Message.new(@maildir)
     end
 
-    should "use default serializer" do
-      assert_equal @message.serializer, Maildir::Message.serializer
-    end
-
-    should "prefer serializer of its maildir" do
+    should "use serializer of its maildir" do
       @maildir.serializer = :foo
       assert_equal @message.serializer, :foo
     end

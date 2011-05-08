@@ -17,19 +17,16 @@ class Maildir::Message
     message
   end
 
-  # The serializer processes data before it is written to disk and after
-  # reading from disk.
-  # Default serializer
-  @@serializer = Maildir::Serializer::Base.new
-
-  # Get the serializer
+  # DEPRECATED: Get the serializer.
+  # @see Maildir.serializer
   def self.serializer
-    @@serializer
+    Maildir.serializer
   end
 
-  # Set the serializer
+  # DEPRECATED: Set the serializer.
+  # @see Maildir.serializer=
   def self.serializer=(serializer)
-    @@serializer = serializer
+    Maildir.serializer = serializer
   end
 
   attr_reader :dir, :unique_name, :info
@@ -70,10 +67,9 @@ class Maildir::Message
     "#<#{self.class} key=#{key} maildir=#{@maildir.inspect}>"
   end
 
-  # Determines the serializer by first trying the maildir and then falling
-  # back to the default serializer.
+  # Helper to get serializer.
   def serializer
-    @maildir.serializer || @@serializer
+    @maildir.serializer
   end
 
   # Writes data to disk. Can only be called on messages instantiated without
