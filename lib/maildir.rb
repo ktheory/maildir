@@ -1,12 +1,33 @@
 require 'fileutils' # For create_directories
 class Maildir
 
+  module Serializer
+    autoload :Base,    'maildir/serializer/base'
+    autoload :Mail,    'maildir/serializer/mail'
+    autoload :Marshal, 'maildir/serializer/marshal'
+    autoload :JSON,    'maildir/serializer/json'
+    autoload :YAML,    'maildir/serializer/yaml'
+  end
+
   SUBDIRS = [:tmp, :new, :cur].freeze
 
   include Comparable
 
   attr_reader :path
   attr_accessor :serializer
+
+  # Default serializer.
+  @@serializer = Maildir::Serializer::Base.new
+
+  # Gets the default serializer.
+  def self.serializer
+    @@serializer
+  end
+
+  # Sets the default serializer.
+  def self.serializer=(serializer)
+    @@serializer = serializer
+  end
 
   # Create a new maildir at +path+. If +create+ is true, will ensure that the
   # required subdirectories exist.
@@ -15,6 +36,11 @@ class Maildir
     @path = File.join(@path, '/') # Ensure path has a trailing slash
     @path_regexp = /^#{Regexp.quote(@path)}/ # For parsing directory listings
     create_directories if create
+  end
+
+  # Returns own serializer or falls back to default.
+  def serializer
+    @serializer || @@serializer
   end
 
   # Compare maildirs by their paths.
