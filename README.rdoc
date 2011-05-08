@@ -95,9 +95,16 @@ The following serializers are included:
 
 Maildir::Serializer::Base simply reads and writes strings to disk.
 
-  Maildir::Message.serializer # => Maildir::Serializer::Base.new (by default)
+`Maildir.serializer` and `Maildir.serializer=` allow you to set default serializer.
+
+  Maildir.serializer # => Maildir::Serializer::Base.new (default)
   message = maildir.add("Hello World!") # writes "Hello World!" to disk
   message.data # => "Hello World!"
+
+You can also set the serializer per maildir:
+
+  maildir = Maildir.new 'Maildir'
+  maildir.serializer = Maildir::Serializer::JSON.new
 
 As of version 1.0.0, the Maildir::Serializer::Base can write IO streams as well as strings. For example:
 
@@ -106,18 +113,18 @@ As of version 1.0.0, the Maildir::Serializer::Base can write IO streams as well 
 This will use Ruby 1.9's more efficient IO.copy_stream method if available,
 and degrade gracefully in Ruby 1.8.
 
+As of version 1.0.2, serializers are autoloaded. Thus it is no longer necessary to manually require them.
+
 The Mail serializer takes a ruby Mail object (http://github.com/mikel/mail) and writes RFC2822 email messages.
 
-  require 'maildir/serializer/mail'
-  Maildir::Message.serializer = Maildir::Serializer::Mail.new
+  maildir.serializer = Maildir::Serializer::Mail.new
   mail = Mail.new(...)
   message = maildir.add(mail) # writes an RFC2822 message to disk
   message.data == mail # => true; data is parsed as a Mail object
 
 The Marshal, JSON, and YAML serializers work similarly. E.g.:
 
-  require 'maildir/serializer/json'
-  Maildir::Message.serializer = Maildir::Serializer::JSON.new
+  maildir.serializer = Maildir::Serializer::JSON.new
   my_data = {"foo" => nil, "my_array" => [1,2,3]}
   message = maildir.add(my_data) # writes {"foo":null,"my_array":[1,2,3]}
   message.data == my_data # => true
