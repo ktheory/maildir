@@ -8,9 +8,6 @@ Dir.glob(serializers).each do |serializer|
   require serializer
 end
 
-# Require 'ktheory-fakefs' until issues 28, 29, and 30 are resolved in
-# defunkt/fakefs. See http://github.com/defunkt/fakefs/issues
-gem "ktheory-fakefs"
 require 'fakefs'
 
 # Create a reusable maildir that's cleaned up when the tests are done

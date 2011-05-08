@@ -24,6 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'shoulda'
   s.add_development_dependency 'mail'
   s.add_development_dependency 'json'
-  s.add_development_dependency 'ktheory-fakefs'
+  s.add_development_dependency 'fakefs', ">= 0.3.2"
 end
 
