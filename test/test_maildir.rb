@@ -17,6 +17,16 @@ class TestMaildir < Test::Unit::TestCase
       end
     end
 
+    should "have no serializer" do
+      assert temp_maildir.serializer.nil?
+    end
+
+    should "set serializer" do
+      maildir = temp_maildir
+      maildir.serializer = :test
+      assert_equal maildir.serializer, :test
+    end
+
     should "expand paths" do
       maildir = Maildir.new("~/test_maildir/")
       expanded_path = File.expand_path("~/test_maildir")

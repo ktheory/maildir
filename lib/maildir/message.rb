@@ -70,9 +70,10 @@ class Maildir::Message
     "#<#{self.class} key=#{key} maildir=#{@maildir.inspect}>"
   end
 
-  # Returns the class' serializer
+  # Determines the serializer by first trying the maildir and then falling
+  # back to the default serializer.
   def serializer
-    @@serializer
+    @maildir.serializer || @@serializer
   end
 
   # Writes data to disk. Can only be called on messages instantiated without
