@@ -1,6 +1,23 @@
 require 'test_helper'
 class TestMessage < Test::Unit::TestCase
 
+  context "A message" do
+    setup do
+      FakeFS::FileSystem.clear
+      @maildir = temp_maildir
+      @message = Maildir::Message.new(@maildir)
+    end
+
+    should "use default serializer" do
+      assert_equal @message.serializer, Maildir::Message.serializer
+    end
+
+    should "prefer serializer of its maildir" do
+      @maildir.serializer = :foo
+      assert_equal @message.serializer, :foo
+    end
+  end
+
   context "An new, unwritten message" do
     setup do
       FakeFS::FileSystem.clear

@@ -6,6 +6,7 @@ class Maildir
   include Comparable
 
   attr_reader :path
+  attr_accessor :serializer
 
   # Create a new maildir at +path+. If +create+ is true, will ensure that the
   # required subdirectories exist.
