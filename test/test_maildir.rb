@@ -17,8 +17,8 @@ class TestMaildir < Test::Unit::TestCase
       end
     end
 
-    should "have no serializer" do
-      assert temp_maildir.serializer.nil?
+    should "have default serializer" do
+      assert_equal temp_maildir.serializer, Maildir::Message.serializer
     end
 
     should "set serializer" do
