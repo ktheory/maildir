@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.name = 'maildir'
   s.version = Maildir::VERSION
 
-  s.authors = ["Aaron Suggs", "Niklas E. Cathor"]
+  s.authors = ["Aaron Suggs"]
   s.description = "A ruby library for reading and writing arbitrary messages in DJB's maildir format"
   s.email = "aaron@ktheory.com"
   s.required_rubygems_version = ">= 1.3.5"

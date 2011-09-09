@@ -134,13 +134,16 @@ It's trivial to create a custom serializer. Implement the following two methods:
   load(path)
   dump(data, path)
 
+== Author
+
+* Aaron Suggs (github[http://github.com/ktheory])
+
 == Contributors
 
-* Aaron Suggs (github[http://github.com/ktheory]) Primary author
-* Niklas E. Cathor (github[http://github.com/nilclass]) added subdir & courierimapkeywords support
-* Ali Polatel (github[http://github.com/alip]) for suggesting IO.copy_stream
-* Harry Vangberg (github[http://github.com/vangberg]) for fixing tests in ruby 1.9
-* Alexander Flatter (github[http://github.com/aflatter]) for improving serializers
+* Niklas E. Cathor (github[http://github.com/nilclass])
+* Ali Polatel (github[http://github.com/alip])
+* Harry Vangberg (github[http://github.com/vangberg])
+* Alexander Flatter (github[http://github.com/aflatter])
 
 == Copyright
 
