@@ -1,0 +1,7 @@
+Version 2.0.0 (Sep 8 2011)
+==========================
+
+* Lazy-load message serializers (using autoload)
+* Remove problematic maildir/subdirs.rb and maildir/keywords.rb.
+(They are extensions of the maildir spec and weren't included by default.)
+* Start tracking changes. :)
