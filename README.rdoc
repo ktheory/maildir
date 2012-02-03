@@ -6,7 +6,7 @@ A ruby library for reading and writing messages in the maildir format.
 
 See http://cr.yp.to/proto/maildir.html and http://en.wikipedia.org/wiki/Maildir
 
-"Two words: no locks." -- Daniel J. Berstein
+"Two words: no locks." -- Daniel J. Bernstein
 
 The maildir format allows multiple processes to read and write arbitrary messages without file locks.
 
