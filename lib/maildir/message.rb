@@ -119,7 +119,7 @@ class Maildir::Message
 
   # Returns an array of single letter flags applied to the message
   def flags
-    @info.sub(INFO,'').split(//)
+    @info.to_s.sub(INFO,'').split(//)
   end
 
   # Sets the flags on a message.
