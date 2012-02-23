@@ -80,6 +80,10 @@ class TestMessage < Test::Unit::TestCase
     should "have the correct data" do
       assert_equal @data, @message.data
     end
+
+    should "have empty flags" do
+      assert_equal [], @message.flags
+    end
   end
 
   context "A processed message" do
