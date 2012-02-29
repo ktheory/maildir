@@ -14,6 +14,9 @@ New messages are initially written to a "tmp" directory with an automatically-ge
 
 While the maildir format was created for email, it works well for arbitrary data. This library can read & write email messages or arbitrary data. See Pluggable serializers for more.
 
+{<img src="https://secure.travis-ci.org/ktheory/maildir.png" />}[http://travis-ci.org/ktheory/maildir]
+
+
 == Install
 
  gem install maildir
