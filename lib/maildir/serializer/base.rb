@@ -10,7 +10,9 @@ class Maildir
     class Base
       # Reads the file at path. Returns the contents of path.
       def load(path)
-        File.read(path)
+        File.open(path,'rb') do |f|
+          f.read
+        end
       end
 
       # Writes data to path. Returns number of bytes written.
