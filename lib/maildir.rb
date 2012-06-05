@@ -128,12 +128,20 @@ class Maildir
   protected
   # Returns an array of keys in dir
   def get_dir_listing(dir)
-    search_path = File.join(self.path, dir.to_s, '*')
+    escaped_path = escape_glob_operators(self.path)
+    search_path = File.join(escaped_path, dir.to_s, '*')
     keys = Dir.glob(search_path)
     #  Remove the maildir's path from the keys
     keys.each do |key|
       key.sub!(@path_regexp, "")
     end
+  end
+
+  # escape special patterns that would be matched
+  # by Dir.glob: *, **, ?, [, ], {, }
+  def escape_glob_operators(path)
+    path.gsub(/(\*\*|\*)/) { |m| "\\#{$1}" }.
+         gsub(/([?\[\]\{\}])/) { |m| "\\#{$1}" }
   end
 end
 require 'maildir/unique_name'

@@ -60,6 +60,16 @@ class TestMaildir < Test::Unit::TestCase
       messages = temp_maildir.list(:cur)
       assert_equal messages, [@message]
     end
+
+    should "work with paths that contain glob characters" do
+      # FakeFS has trouble with directories containing square brackets
+      FakeFS.deactivate!
+      FileUtils.rm_rf("/tmp/maildir [foo]", :secure => true)
+      maildir = Maildir.new("/tmp/maildir [foo]")
+      message = maildir.add("Hello, world")
+      assert_equal [message], maildir.list(:new)
+      FakeFS.activate!
+    end
   end
 
   context "Maildirs with the same path" do
