@@ -53,12 +53,51 @@ class TestMaildir < Test::Unit::TestCase
       messages = temp_maildir.list(:new)
       assert_equal messages, [@message]
     end
-
-    should "list a cur message" do
-      @message = temp_maildir.add("")
-      @message.process
-      messages = temp_maildir.list(:cur)
-      assert_equal messages, [@message]
+    
+    context "cur message" do
+      should "list a cur message" do
+        @message = temp_maildir.add("")
+        @message.process
+        messages = temp_maildir.list(:cur)
+        assert_equal messages, [@message]
+      end
+      
+      should "list and filter cur messages based on flags" do
+        @message = temp_maildir.add("")
+        @message.process
+        
+        @flagged_message = temp_maildir.add("")
+        @flagged_message.process
+        @flagged_message.add_flag('F')
+        
+        messages = temp_maildir.list(:cur, :flags => 'F')
+        assert_equal messages, [@flagged_message]
+      end
+      
+      should "list and filter cur messages based on multiple flags" do
+        @message = temp_maildir.add("")
+        @message.process
+        
+        @flagged_message = temp_maildir.add("")
+        @flagged_message.process
+        @flagged_message.add_flag('F')
+        @flagged_message.add_flag('S')
+        
+        messages = temp_maildir.list(:cur, :flags => 'FS')
+        assert_equal messages, [@flagged_message]
+      end
+      
+      should "list and filter cur messages without any flags" do
+        @message = temp_maildir.add("")
+        @message.process
+        
+        @flagged_message = temp_maildir.add("")
+        @flagged_message.process
+        @flagged_message.add_flag('F')
+        
+        messages = temp_maildir.list(:cur, :flags => '')
+        assert_equal messages, [@message]
+      end
     end
   end
 
