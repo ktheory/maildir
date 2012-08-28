@@ -55,9 +55,9 @@ Add some flags to the message to indicate state. See "What can I put in info" at
 
 List :cur messages based on flags.
 
-	maildir.list(:cur, :flags => 'F') # => lists all messages with flag 'F'
-	maildir.list(:cur, :flags => 'FS') # => lists all messages with flag 'F' and 'S'; Flags must be specified in acending ASCII order ('FS' and not 'SF')
-	maildir.list(:cur, :flags => '') # => lists all messages without any flags
+  maildir.list(:cur, :flags => 'F') # => lists all messages with flag 'F
+  maildir.list(:cur, :flags => 'FS') # => lists all messages with flag 'F' and 'S'; Flags must be specified in acending ASCII order ('FS' and not 'SF')
+  maildir.list(:cur, :flags => '') # => lists all messages without any flags
 
 Get a key to uniquely identify the message
 
