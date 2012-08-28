@@ -76,6 +76,14 @@ class Maildir
   end
 
   # Returns an arry of messages from :new or :cur directory, sorted by key.
+  # If options[:flags] is specified and directory is :cur, returns messages with flags specified
+  # 
+  # E.g.
+  # maildir.list(:cur, :flags => 'F') # => lists all messages with flag 'F'
+  # maildir.list(:cur, :flags => 'FS') # => lists all messages with flag 'F' and 'S'; Flags must be specified in acending ASCII order ('FS' and not 'SF')
+  # maildir.list(:cur, :flags => '') # => lists all messages without any flags
+  # This option does not work for :new directory
+  #
   # If options[:limit] is specified, returns only so many keys.
   #
   # E.g.
@@ -86,7 +94,10 @@ class Maildir
       raise ArgumentError, "dir must be :new, :cur, or :tmp"
     end
 
-    keys = get_dir_listing(dir)
+    # Set flags to filter messages
+    # Silently ignored if dir is :new
+    flags = (dir.to_sym == :cur) ? options[:flags] : nil
+    keys = get_dir_listing(dir, :flags => flags)
 
     # Sort the keys (chronological order)
     # TODO: make sorting configurable
@@ -127,8 +138,10 @@ class Maildir
 
   protected
   # Returns an array of keys in dir
-  def get_dir_listing(dir)
-    search_path = File.join(self.path, dir.to_s, '*')
+  def get_dir_listing(dir, options={})
+  	filter = "*"
+  	filter = "#{filter}:2,#{options[:flags]}" if options[:flags]
+    search_path = File.join(self.path, dir.to_s, filter)
     keys = Dir.glob(search_path)
     #  Remove the maildir's path from the keys
     keys.each do |key|
