@@ -30,6 +30,16 @@ class TestUniqueName < Test::Unit::TestCase
       @new_name.send(:instance_variable_set, :@now, @now)
       assert_not_equal @name, @new_name.to_s
     end
+    
+    should "be chronological" do
+      @name1 = Maildir::UniqueName.new
+      @name1.send(:instance_variable_set, :@now, Time.at(0.000009))
+      
+      @name2 = Maildir::UniqueName.new
+      @name2.send(:instance_variable_set, :@now, Time.at(0.100000))
+      
+      assert_operator @name2.to_s, :>, @name1.to_s
+    end
 
   end
 
