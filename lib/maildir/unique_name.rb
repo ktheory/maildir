@@ -37,7 +37,7 @@ class Maildir::UniqueName
   # The middle part contains the microsecond, the process id, and a
   # per-process incrementing counter
   def middle
-    "M#{microsecond}P#{process_id}Q#{delivery_count}"
+    "M#{'%06d' % microsecond}P#{process_id}Q#{delivery_count}"
   end
 
   # The right part is the hostname
