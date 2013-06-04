@@ -110,7 +110,7 @@ class TestMaildir < Test::Unit::TestCase
       @message.process
       @message.add_flag(unsorted_flags)
 
-      assert_equal sorted_flags.chars, @message.flags
+      assert_equal sorted_flags.split(''), @message.flags
     end
 
     should "be removed from flag list" do
@@ -121,10 +121,10 @@ class TestMaildir < Test::Unit::TestCase
       @message = temp_maildir.add("")
       @message.process
       @message.add_flag(flags_to_add)
-      assert_equal flags_to_add.chars, @message.flags
+      assert_equal flags_to_add.split(''), @message.flags
 
       @message.remove_flag(flags_to_remove)
-      assert_equal flags_remaining.chars, @message.flags
+      assert_equal flags_remaining.split(''), @message.flags
     end
   end
 
