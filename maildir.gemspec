@@ -20,6 +20,8 @@ Gem::Specification.new do |s|
   s.summary = %q{Read & write messages in the maildir format}
   s.test_files = Dir.glob("test/**/*")
 
+  s.required_ruby_version = '>= 1.9.3'
+
   s.add_development_dependency 'rake'
   s.add_development_dependency 'shoulda'
   s.add_development_dependency 'mail'
