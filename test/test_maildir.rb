@@ -101,6 +101,19 @@ class TestMaildir < Test::Unit::TestCase
     end
   end
 
+  context "multiple flags" do
+    should "be added in sorted order" do
+      sorted_flags   = 'FS'
+      unsorted_flags = 'SF'
+
+      @message = temp_maildir.add("")
+      @message.process
+      @message.add_flag(unsorted_flags)
+
+      assert_equal sorted_flags.chars, @message.flags
+    end
+  end
+
   context "Maildirs with the same path" do
     should "be identical" do
       another_maildir = Maildir.new(temp_maildir.path, false)
