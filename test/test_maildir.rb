@@ -112,6 +112,20 @@ class TestMaildir < Test::Unit::TestCase
 
       assert_equal sorted_flags.chars, @message.flags
     end
+
+    should "be removed from flag list" do
+      flags_to_add    = 'FSXYZ'
+      flags_to_remove = 'XYZ'
+      flags_remaining = 'FS'
+
+      @message = temp_maildir.add("")
+      @message.process
+      @message.add_flag(flags_to_add)
+      assert_equal flags_to_add.chars, @message.flags
+
+      @message.remove_flag(flags_to_remove)
+      assert_equal flags_remaining.chars, @message.flags
+    end
   end
 
   context "Maildirs with the same path" do
