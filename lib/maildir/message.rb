@@ -134,10 +134,13 @@ class Maildir::Message
     self.flags = (flags << flag.upcase)
   end
 
-  # Removes a flag from a message.
+  # Removes flags from a message.
   # Returns the message's key if successful, false otherwise.
-  def remove_flag(flag)
-    self.flags = flags.delete_if{|f| f == flag.upcase}
+  #
+  # flags:: String or Array
+  def remove_flag(flags)
+    return self.flags if flags.blank?
+    self.flags = self.flags.reject { |f| f =~ /[#{Array(flags).join}]/i }
   end
 
   # Returns the filename of the message
