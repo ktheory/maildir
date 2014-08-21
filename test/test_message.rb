@@ -1,5 +1,5 @@
-require 'test_helper'
-class TestMessage < Test::Unit::TestCase
+require_relative 'helper'
+class TestMessage < Minitest::Test
 
   context "A message" do
     setup do
@@ -53,7 +53,7 @@ class TestMessage < Test::Unit::TestCase
     end
 
     should "not be writable" do
-      assert_raise RuntimeError do
+      assert_raises RuntimeError do
         @message.write("nope!")
       end
     end
@@ -95,7 +95,7 @@ class TestMessage < Test::Unit::TestCase
     end
 
     should "not be writable" do
-      assert_raise RuntimeError do
+      assert_raises RuntimeError do
         @message.write("nope!")
       end
     end
@@ -112,7 +112,7 @@ class TestMessage < Test::Unit::TestCase
       info = "2,FRS"
       @message.info = "2,FRS"
       assert_equal @message.info, info
-      assert_match /#{info}$/, @message.path
+      assert_match(/#{info}$/, @message.path)
     end
 
     should "add and remove flags" do
@@ -141,7 +141,7 @@ class TestMessage < Test::Unit::TestCase
         @message.flags = arg
         assert_equal results, @message.flags
         path_suffix = "#{Maildir::Message::INFO}#{results.join('')}"
-        assert_match /#{path_suffix}$/, @message.path
+        assert_match(/#{path_suffix}$/, @message.path)
       end
     end
   end
@@ -180,14 +180,13 @@ class TestMessage < Test::Unit::TestCase
     end
 
     should "raise error for data" do
-      assert_raise Errno::ENOENT do
+      assert_raises Errno::ENOENT do
         @message.data
       end
       assert @message.frozen?
     end
 
     should "not be processed" do
-      old_key = @message.key
       assert_equal false, @message.process
       assert @message.frozen?
     end
@@ -208,9 +207,9 @@ class TestMessage < Test::Unit::TestCase
     should "differ" do
       @message1 = temp_maildir.add("")
       @message2 = temp_maildir.add("")
-      assert_equal -1, @message1 <=> @message2
+      assert_equal(-1, @message1 <=> @message2)
       assert_equal 1,  @message2 <=> @message1
-      assert_not_equal @message1, @message2
+      refute_equal @message1, @message2
     end
   end
 

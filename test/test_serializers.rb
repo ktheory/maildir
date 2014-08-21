@@ -1,5 +1,5 @@
-require 'test_helper'
-class TestSerializers < Test::Unit::TestCase
+require_relative 'helper'
+class TestSerializers < Minitest::Test
 
 
   serializers = [

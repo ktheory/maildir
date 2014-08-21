@@ -1,5 +1,5 @@
-require 'test_helper'
-class TestMaildir < Test::Unit::TestCase
+require_relative 'helper'
+class TestMaildir < Minitest::Test
 
   context "A maildir" do
     setup do
