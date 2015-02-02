@@ -157,4 +157,4 @@ It's trivial to create a custom serializer. Implement the following two methods:
 
 == Copyright
 
-Copyright (c) 2010 Aaron Suggs. See LICENSE for details.
+Copyright (c) 2010-2014 Aaron Suggs. See LICENSE for details.
