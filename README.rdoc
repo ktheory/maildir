@@ -120,8 +120,11 @@ As of version 1.0.0, the Maildir::Serializer::Base can write IO streams as well 
 
   message.add(STDIN)
 
-This will use Ruby 1.9's more efficient IO.copy_stream method if available,
-and degrade gracefully in Ruby 1.8.
+This will use the more efficient IO.copy_stream method from Ruby 1.9+ if
+available, and degrade gracefully in Ruby 1.8. (Important note: Please be aware
+that Ruby 1.8.x is no longer officially supported by the maildir gem; see
+[.travis.yml](https://github.com/ktheory/maildir/blob/master/.travis.yml) for a
+list of currently-supported Ruby versions.)
 
 As of version 1.0.2, serializers are autoloaded. Thus it is no longer necessary to manually require them.
 
@@ -148,6 +151,10 @@ It's trivial to create a custom serializer. Implement the following two methods:
 
 * Aaron Suggs (github[http://github.com/ktheory])
 
+== Maintainer
+
+* Todd A. Jacobs (github[http://github.com/codegnome])
+
 == Contributors
 
 * Niklas E. Cathor (github[http://github.com/nilclass])
@@ -157,4 +164,4 @@ It's trivial to create a custom serializer. Implement the following two methods:
 
 == Copyright
 
-Copyright (c) 2010 Aaron Suggs. See LICENSE for details.
+Copyright (c) 2010-2014 Aaron Suggs. See LICENSE for details.

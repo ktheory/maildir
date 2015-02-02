@@ -1,6 +1,6 @@
-require 'rubygems'
 require 'bundler/setup'
 require 'rake/testtask'
+require 'bundler/gem_tasks'
 
 Rake::TestTask.new do |t|
   t.pattern = "test/test_*.rb"
