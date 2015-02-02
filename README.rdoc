@@ -148,6 +148,10 @@ It's trivial to create a custom serializer. Implement the following two methods:
 
 * Aaron Suggs (github[http://github.com/ktheory])
 
+== Maintainer
+
+* Todd A. Jacobs (github[http://github.com/codegnome])
+
 == Contributors
 
 * Niklas E. Cathor (github[http://github.com/nilclass])
