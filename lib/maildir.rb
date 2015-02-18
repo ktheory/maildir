@@ -14,7 +14,7 @@ class Maildir
   include Comparable
 
   attr_reader :path
-  attr_accessor :serializer
+  attr_writer :serializer
 
   # Default serializer.
   DEFAULT_SERIALIZER = Maildir::Serializer::Base.new.freeze
