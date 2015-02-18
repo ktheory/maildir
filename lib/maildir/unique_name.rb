@@ -7,7 +7,7 @@ class Maildir::UniqueName
     def counter
       @counter_mutex ||= Mutex.new
       @counter_mutex.synchronize do
-        @counter = @counter.to_i + 1
+        @counter = (@counter ||=  0) + 1
       end
     end
 
