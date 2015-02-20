@@ -17,6 +17,7 @@ class TestSerializers < Minitest::Test
     # NB: dumper.object_id makes test names unique
     context "A message serialized with #{klass} (#{dumper.object_id})" do
       setup do
+        @original_serializer = ::Maildir::Message.serializer
         FakeFS::FileSystem.clear
         @data = case klass.new
         when Maildir::Serializer::Mail
@@ -33,6 +34,10 @@ class TestSerializers < Minitest::Test
         # Set the message serializer
         Maildir::Message.serializer = klass.new
         @message = temp_maildir.add(@data)
+      end
+
+      teardown do
+        Maildir::Message.serializer = @original_serializer
       end
 
       should "have the correct data" do
