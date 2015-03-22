@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.name = 'maildir'
   s.version = Maildir::VERSION
 
-  s.authors = ["Aaron Suggs"]
+  s.authors = ["Aaron Suggs", "Todd A. Jacobs"]
   s.description = "A ruby library for reading and writing arbitrary messages in DJB's maildir format"
-  s.email = "aaron@ktheory.com"
+  s.email = ["aaron@ktheory.com", "spamivore+maildir.gem@codegnome.org"]
   s.required_rubygems_version = ">= 1.3.5"
 
   s.files = Dir.glob("{bin,lib}/**/*") + %w(LICENSE README.rdoc Rakefile)
