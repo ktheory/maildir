@@ -14,7 +14,7 @@ class Maildir
   include Comparable
 
   attr_reader :path
-  attr_accessor :serializer
+  attr_writer :serializer
 
   # Default serializer.
   DEFAULT_SERIALIZER = Maildir::Serializer::Base.new.freeze
@@ -36,6 +36,7 @@ class Maildir
     @path = File.expand_path(path)
     @path = File.join(@path, '/') # Ensure path has a trailing slash
     @path_regexp = /^#{Regexp.quote(@path)}/ # For parsing directory listings
+    @serializer = nil
     create_directories if create
   end
 
