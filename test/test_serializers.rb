@@ -1,7 +1,6 @@
 require_relative 'helper'
 class TestSerializers < Minitest::Test
 
-
   serializers = [
     # Test the base serializer with a string
     [Maildir::Serializer::Base,    lambda {|data| data}],
@@ -33,6 +32,10 @@ class TestSerializers < Minitest::Test
         # Set the message serializer
         Maildir::Message.serializer = klass.new
         @message = temp_maildir.add(@data)
+      end
+
+      teardown do
+        Maildir.serializer = Maildir::DEFAULT_SERIALIZER
       end
 
       should "have the correct data" do
