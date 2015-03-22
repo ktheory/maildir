@@ -18,7 +18,7 @@ class Maildir
 
   # Default serializer.
   DEFAULT_SERIALIZER = Maildir::Serializer::Base.new.freeze
-  @@serializer = Maildir::Serializer::Base.new
+  @@serializer = DEFAULT_SERIALIZER
 
   # Gets the default serializer.
   def self.serializer
