@@ -77,6 +77,11 @@ class TestMessage < Minitest::Test
       assert File.exists?(@message.path)
     end
 
+    # Detect order-dependent regressions when SEED=48094.
+    should "use the Base serializer" do
+      assert_equal Maildir::Serializer::Base, Maildir.serializer.class
+    end
+
     should "have the correct data" do
       assert_equal @data, @message.data
     end
