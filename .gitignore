@@ -2,3 +2,6 @@ pkg/*
 benchmarks/scratch.rb
 .DS_Store
 Gemfile.lock
+tags
+TAGS
+.c9
