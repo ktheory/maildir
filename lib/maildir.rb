@@ -17,6 +17,7 @@ class Maildir
   attr_accessor :serializer
 
   # Default serializer.
+  DEFAULT_SERIALIZER = Maildir::Serializer::Base.new.freeze
   @@serializer = Maildir::Serializer::Base.new
 
   # Gets the default serializer.
