@@ -2,11 +2,13 @@
 class Maildir::UniqueName
   require 'thread' # For mutex support
   require 'socket' # For getting the hostname
+  
+  COUNTER_MUTEX = Mutex.new
+
   class << self
     # Return a thread-safe increasing counter
     def counter
-      @counter_mutex ||= Mutex.new
-      @counter_mutex.synchronize do
+      COUNTER_MUTEX.synchronize do
         @counter = @counter.to_i + 1
       end
     end
