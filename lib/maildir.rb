@@ -41,7 +41,7 @@ class Maildir
 
   # Returns own serializer or falls back to default.
   def serializer
-    @serializer || @@serializer
+    @serializer ||= @@serializer
   end
 
   # Compare maildirs by their paths.
