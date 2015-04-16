@@ -2,7 +2,7 @@
 class Maildir::UniqueName
   require 'thread' # For mutex support
   require 'socket' # For getting the hostname
-  
+
   COUNTER_MUTEX = Mutex.new
 
   class << self
