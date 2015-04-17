@@ -43,6 +43,7 @@ class Maildir::Message
     if key.nil?
       @dir = :tmp
       @unique_name = Maildir::UniqueName.create
+      @info = nil
     else
       parse_key(key)
     end
