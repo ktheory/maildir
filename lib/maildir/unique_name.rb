@@ -9,7 +9,8 @@ class Maildir::UniqueName
     # Return a thread-safe increasing counter
     def counter
       COUNTER_MUTEX.synchronize do
-        @counter = @counter.to_i + 1
+        @counter ||= 0
+        @counter = @counter.to_i.succ
       end
     end
 
