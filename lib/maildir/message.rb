@@ -41,9 +41,9 @@ class Maildir::Message
   def initialize(maildir, key=nil)
     @maildir = maildir
     if key.nil?
-      @dir = :tmp
+      @dir         = :tmp
+      @info        = nil
       @unique_name = Maildir::UniqueName.create
-      @info = nil
     else
       parse_key(key)
     end
