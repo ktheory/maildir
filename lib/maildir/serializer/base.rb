@@ -22,6 +22,14 @@ class Maildir
       def dump(data, path)
         if data.respond_to?(:read)
           if IO.respond_to?(:copy_stream)
+            unless data.is_a?(String) || data.is_a?(IO)
+              if data.respond_to? :to_io
+                data = data.to_io
+              elsif data.respond_to? :to_s
+                data = data.to_s
+              end
+            end
+            
             IO.copy_stream(data, path)
           else
             write(data.read, path)
