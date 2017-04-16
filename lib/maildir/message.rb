@@ -44,6 +44,7 @@ class Maildir::Message
       @dir         = :tmp
       @info        = nil
       @unique_name = Maildir::UniqueName.create
+      @info = nil
     else
       parse_key(key)
     end
