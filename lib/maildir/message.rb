@@ -1,3 +1,5 @@
+require 'active_support/core_ext/object/blank'
+
 class Maildir::Message
   # COLON seperates the unique name from the info
   COLON = ':'
