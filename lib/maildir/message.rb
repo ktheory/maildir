@@ -142,7 +142,7 @@ class Maildir::Message
   #
   # flags:: String or Array
   def remove_flag(flags)
-    return self.flags if flags.blank?
+    return self.flags if !flags || flags.empty?
     self.flags = self.flags.reject { |f| f =~ /[#{Array(flags).join}]/i }
   end
 
